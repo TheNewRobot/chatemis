@@ -9,8 +9,11 @@ import time
 import os
 # For Ubuntu
 import pyttsx3
+# We can consider using the warning library to delete the warning logs 
 
 wake_word = 'artemis'
+listening_for_wake_word = True
+
 model = GPT4All('/root/.local/share/nomic.ai/GPT4All/gpt4all-falcon-newbpe-q4_0.gguf', allow_download=False)
 r = sr.Recognizer()
 
@@ -18,12 +21,11 @@ r = sr.Recognizer()
 # tiny_model = whisper.load_model('tiny')
 # base_model = whisper.load_model('base')
 
-# Continuously run the code use the cached files
+# Continuously run the code using the cached files in this path
 tiny_model_path = os.path.expanduser('/root/.cache/whisper/tiny.pt')
 base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
 tiny_model = whisper.load_model(tiny_model_path)
 base_model = whisper.load_model(base_model_path)
-listening_for_wake_word = True
 source = sr.Microphone()
 
 # tiktoken is frozen so it can load the vocab and the token from cached files, so we can use it online 
