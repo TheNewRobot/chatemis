@@ -9,4 +9,4 @@ import time
 import os
 
 wake_word = 'artemis'
-model = GPT4All('/home/romela/Downloads/mistral-7b-instruct-v0.1.Q4_0.gguf')
+model = GPT4All('/root/.local/share/nomic.ai/GPT4All/gpt4all-falcon-newbpe-q4_0.gguf')
