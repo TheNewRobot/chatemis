@@ -9,6 +9,7 @@ import time
 import os
 # For Ubuntu
 import pyttsx3
+import pyaudio
 # We can consider using the warning library to delete the warning logs 
 
 wake_word = 'artemis'
@@ -82,7 +83,7 @@ def start_listening():
     while True:
         time.sleep(1)
 
-if __name__ == '__main__'
+if __name__ == '__main__':
     start_listening()
 
 
