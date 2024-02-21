@@ -1,4 +1,5 @@
 from os import system
+import pyaudio
 import speech_recognition as sr
 from playsound import playsound
 from gpt4all import GPT4All
@@ -9,7 +10,7 @@ import time
 import os
 # For Ubuntu
 import pyttsx3
-import pyaudio
+
 # We can consider using the warning library to delete the warning logs 
 
 wake_word = 'artemis'
