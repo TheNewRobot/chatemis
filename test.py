@@ -4,7 +4,7 @@ import pyttsx3
 
 # TODO: Include a simple function to print and say the same thing!
 # Constants
-MODE = 1
+MODE = 0
 ENERGY_THRESHOLD = 6000
 PHRASE_TIME_LIMIT = 3 # seconds
 
