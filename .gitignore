@@ -1,4 +1,4 @@
 .python-version
-*.wav
+scripts/*.wav
 vectorstore/
 models/

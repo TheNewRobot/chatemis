@@ -1,0 +1,40 @@
+Test:
+  activation: elu
+  actor_hidden_dims:
+  - 512
+  - 256
+  - 128
+  adaptation_dims: []
+  adaptation_labels: []
+  adaptation_module_branch_hidden_dims:
+  - 256
+  - 128
+  adaptation_weights: []
+  critic_hidden_dims:
+  - 512
+  - 256
+  - 128
+  init_noise_std: 1
+  use_decoder: false
+:
+  asset:
+    angular_damping: 0
+    armature: 0
+    collapse_fixed_joints: true
+    default_dof_drive_mode: 3
+    density: 0.001
+    disable_gravity: false
+    file: '{MINI_GYM_ROOT_DIR}/resources/robots/go1/urdf/go1.urdf'
+    fix_base_link: false
+    flip_visual_attachments: false
+    foot_name: foot
+    linear_damping: 0
+    max_angular_velocity: 1000
+    max_linear_velocity: 1000
+    penalize_contacts_on:
+    - thigh
+    - calf
+    replace_cylinder_with_capsule: true
+    self_collisions: 0
+    terminate_after_contacts_on: []
+    thickness: 0.01

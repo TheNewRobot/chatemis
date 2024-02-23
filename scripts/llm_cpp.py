@@ -7,11 +7,8 @@ from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 
-# model_name_or_path = "mistralai/Mistral-7B-v0.1"
-# model_basename = "pytorch_model-00002-of-00002.bin" # the model is in bin format
-# model_path = hf_hub_download(repo_id=model_name_or_path, filename=model_basename)
-DB_FAISS_PATH = '../vectorstore/db_faiss'
 
+DB_FAISS_PATH = '../vectorstore/db_faiss'
 
 custom_prompt_template = """Use the following pieces of information to answer the user's question.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
@@ -37,9 +34,9 @@ def retrieval_qa_chain(llm, prompt, db):
     return qa_chain
 
 def load_llm():
-    # Load the locally downloaded model here
     n_gpu_layers = -1
     n_batch = 512
+
     # Download the .gguf model that you want to implement and then used it
     # It only works for gguf
     llm = LlamaCpp(model_path="../models/ggml-model-q4_0.gguf",
@@ -64,30 +61,21 @@ def qa_bot():
     qa = retrieval_qa_chain(llm, qa_prompt, db)
     return qa
 
-qa = qa_bot()
+def main():
+    qa = qa_bot()
+    query = "What sensors does the humanoid robot ARTEMIS have?"
+    print("------------------")
+    print(query)   
+    print("------------------")
+    print("These are the stats of the response: ")  
+    response = qa.invoke({'query': query})
+    print("------------------")
+    print('This is the answer:')   
+    print(response['result'])
+    print("------------------")
 
-query = "What sensors does the humanoid robot ARTEMIS have?"
-print("------------------")
-print(query)   
-print("------------------")
-print("These are the stats of the response: ")  
-response = qa.invoke({'query': query})
-print("------------------")
-print('This is the answer:')   
-print(response['result'])
-print("------------------")
+if __name__ == '__main__':
+    main()
 
-
-# llm = LlamaCpp(
-#  model_path=model_path,
-#  max_tokens=512,
-#  temperature = 0.5,
-#  n_gpu_layers=n_gpu_layers,
-#  n_batch=n_batch,
-#  top_p=0.95,
-#  repeat_penalty=1.2,
-#  top_k=50,
-#  callback_manager=callback_manager,
-#  verbose=True)
 
  

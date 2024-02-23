@@ -33,7 +33,6 @@ text_splitter = CharacterTextSplitter(
 texts = text_splitter.split_documents(docs)
 
 # Embedddings
-
 # Run this once so it downloads the embedding model,
 instructor_embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-large",
                                                     model_kwargs={"device":device})
