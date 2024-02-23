@@ -15,8 +15,8 @@ llm_cpp:
     n_batch: 512
     max_tokens: 150
     top_p: 1
-    repeat_penalty: 2.0
+    repeat_penalty: 1.2
     top_k: 50
     n_ctx: 2048
-    temperature: 0.3
+    temperature: 0.75
     verbose: True

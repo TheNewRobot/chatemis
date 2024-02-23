@@ -6,9 +6,12 @@ from InstructorEmbedding import INSTRUCTOR
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
+import yaml
 
+with open("config.yaml", "r") as f:
+        config = yaml.safe_load(f)
 
-DB_FAISS_PATH = '../vectorstore/db_faiss'
+DB_FAISS_PATH = config['saving_tokens']['db_faiss_path']
 
 custom_prompt_template = """Use the following pieces of information to answer the user's question.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
@@ -34,26 +37,23 @@ def retrieval_qa_chain(llm, prompt, db):
     return qa_chain
 
 def load_llm():
-    n_gpu_layers = -1
-    n_batch = 512
-
     # Download the .gguf model that you want to implement and then used it
     # It only works for gguf
-    llm = LlamaCpp(model_path="../models/ggml-model-q4_0.gguf",
-      n_gpu_layers=n_gpu_layers,
-      n_batch=n_batch,
-      max_tokens=150,
-      top_p=1,
-      repeat_penalty=1.2,
-      top_k=50,
-      n_ctx=2048, # Uncomment to increase the context window
-      temperature = 0.75,
-      verbose=True,
+    llm = LlamaCpp(model_path=config['llm_cpp']['model_path'],
+      n_gpu_layers=config['llm_cpp']['load_llm']['n_gpu_layers'],
+      n_batch=config['llm_cpp']['load_llm']['n_batch'],
+      max_tokens=config['llm_cpp']['load_llm']['max_tokens'],
+      top_p=config['llm_cpp']['load_llm']['top_p'],
+      repeat_penalty=config['llm_cpp']['load_llm']['repeat_penalty'],
+      top_k=config['llm_cpp']['load_llm']['top_k'],
+      n_ctx=config['llm_cpp']['load_llm']['n_ctx'], # Uncomment to increase the context window
+      temperature = config['llm_cpp']['load_llm']['temperature'],
+      verbose=config['llm_cpp']['load_llm']['verbose'],
     )
     return llm
 
 def qa_bot():   
-    embeddings = HuggingFaceInstructEmbeddings(model_name="hkunlp/instructor-large",
+    embeddings = HuggingFaceInstructEmbeddings(model_name=config['saving_tokens']['instructor_embeddings'],
                                         model_kwargs={'device': 'cuda'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
     llm = load_llm()
@@ -63,7 +63,7 @@ def qa_bot():
 
 def main():
     qa = qa_bot()
-    query = "What sensors does the humanoid robot ARTEMIS have?"
+    query = config['llm_cpp']['query']
     print("------------------")
     print(query)   
     print("------------------")
