@@ -1,16 +1,12 @@
 # pip install langchain
+from langchain_community.document_loaders import DirectoryLoader # pip install "unstructured[local-inference]" This install torch 
 import torch
-from langchain_community.document_loaders import DirectoryLoader # pip install "unstructured[local-inference]"
 from langchain.text_splitter import CharacterTextSplitter
 from InstructorEmbedding import INSTRUCTOR # pip install InstructorEmbedding #pip install sentence-transformers==2.2.2 (we should use this specific version)
-from langchain.embeddings import HuggingFaceInstructEmbeddings
+from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 import pickle
-from langchain.vectorstores import FAISS # pip install faiss_gpu
-import warnings
-#Suppress the FutureWarning related to ‘numpy._no_nep50_warning’
-warnings.filterwarnings("ignore", message="In the future `np\..+` will be defined as the corresponding NumPy scalar.", category=FutureWarning, module='numpy')
+from langchain_community.vectorstores import FAISS # pip install faiss_gpu 
 
-# TODO: Delete the warnigs 
 # TODO: Define the cached folder
 
 DATA_PATH = '../data/'
@@ -30,7 +26,7 @@ docs = loader.load()
 text_splitter = CharacterTextSplitter(
     separator="\n\n",
     chunk_size=1000,
-    chunk_overlap=200,
+    chunk_overlap=100,
     length_function=len,
     is_separator_regex=False,
 )
@@ -50,4 +46,4 @@ db.save_local(DB_FAISS_PATH)
 ###################################################################################
 
 
-print("You passed this!")
+print("Documents loaded!")
