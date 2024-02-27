@@ -1,15 +1,22 @@
-saving_tokens:
+tokenizer:
   data_path: '../data/'
   db_faiss_path: '../vectorstore/db_faiss'
+  instructor_embeddings: "hkunlp/instructor-xl"
   text_spliter:
     separator: "\n\n"
     chunk_size: 600
     chunk_overlap: 400
     is_separator: True
-  instructor_embeddings: "hkunlp/instructor-xl"
 llm_cpp:
-  query: "What type of sensors does ARTEMIS have?"
   model_path: "../models/llama_2_7b_f16.gguf"
+  query: "What type of sensors does ARTEMIS have?"
+  custom_prompt_template: |
+      Use the following pieces of information to answer the user's question as a casual conversation.
+      Don't cite or mention any references from the text or figures. 
+      Context: {context}
+      Question: {question}
+      Only return helpful and gramatically correct answers below.
+      Helpful answer:
   load_llm: 
     n_gpu_layers: -1
     n_batch: 512 # This will tune the speed of processing the answer
@@ -20,5 +27,7 @@ llm_cpp:
     n_ctx: 424 
     temperature: 0.4
     verbose: False
+    
+
 # How are you feeling today ARTEMIS?
 # What type of sensors does ARTEMIS have?
