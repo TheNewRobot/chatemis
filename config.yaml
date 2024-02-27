@@ -3,20 +3,22 @@ saving_tokens:
   db_faiss_path: '../vectorstore/db_faiss'
   text_spliter:
     separator: "\n\n"
-    chunk_size: 256
-    chunk_overlap: 100
-    is_separator: False
+    chunk_size: 600
+    chunk_overlap: 400
+    is_separator: True
   instructor_embeddings: "hkunlp/instructor-xl"
 llm_cpp:
-  query: "What sensors does the humanoid robot ARTEMIS have?"
+  query: "What type of sensors does ARTEMIS have?"
   model_path: "../models/llama_2_7b_f16.gguf"
   load_llm: 
     n_gpu_layers: -1
     n_batch: 512 # This will tune the speed of processing the answer
     max_tokens: 150
-    top_p: 0.8
-    repeat_penalty: 3.0
+    top_p: 0.9
+    repeat_penalty: 4.0
     top_k: 10 # 
-    n_ctx: 512 
-    temperature: 0.3
-    verbose: True
+    n_ctx: 424 
+    temperature: 0.4
+    verbose: False
+# How are you feeling today ARTEMIS?
+# What type of sensors does ARTEMIS have?

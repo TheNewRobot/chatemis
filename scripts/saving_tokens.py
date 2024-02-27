@@ -1,7 +1,7 @@
 # pip install langchain
 from langchain_community.document_loaders import DirectoryLoader # pip install "unstructured[local-inference]" This install torch 
 import torch
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from InstructorEmbedding import INSTRUCTOR # pip install InstructorEmbedding #pip install sentence-transformers==2.2.2 (we should use this specific version)
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 import pickle

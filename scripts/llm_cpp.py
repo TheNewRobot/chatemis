@@ -14,11 +14,11 @@ with open("../config.yaml", "r") as f:
 DB_FAISS_PATH = config['saving_tokens']['db_faiss_path']
 llm_model = config['llm_cpp']['model_path']
 
-custom_prompt_template = """Use the following pieces of information to answer the user's question in first person.
-If you don't know the answer, just say that you don't know, don't try to make up an answer. 
+custom_prompt_template = """Use the following pieces of information to answer the user's question as a casual conversation
+Don't cite or mention any references from the text or figures. 
 Context: {context}
 Question: {question}
-Only return helpful and gramatically correct answers below. Ignore the portions of the context that have the word 'Figures'.
+Only return helpful and gramatically correct answers below.
 Helpful answer: """
 
 def set_custom_prompt():
