@@ -8,7 +8,7 @@ import pickle
 from langchain_community.vectorstores import FAISS # pip install faiss_gpu 
 import yaml
 
-with open("config.yaml", "r") as f:
+with open("../config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
 DATA_PATH = config['saving_tokens']['data_path']

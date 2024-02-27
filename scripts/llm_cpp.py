@@ -8,16 +8,17 @@ from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 import yaml
 
-with open("config.yaml", "r") as f:
+with open("../config.yaml", "r") as f:
         config = yaml.safe_load(f)
 
 DB_FAISS_PATH = config['saving_tokens']['db_faiss_path']
+llm_model = config['llm_cpp']['model_path']
 
-custom_prompt_template = """Use the following pieces of information to answer the user's question.
+custom_prompt_template = """Use the following pieces of information to answer the user's question in first person.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
 Context: {context}
 Question: {question}
-Only return the helpful answer below and nothing else. Ignore the portions of the context that have the word 'Figures'.
+Only return helpful and gramatically correct answers below. Ignore the portions of the context that have the word 'Figures'.
 Helpful answer: """
 
 def set_custom_prompt():
@@ -59,10 +60,12 @@ def qa_bot():
     llm = load_llm()
     qa_prompt = set_custom_prompt()
     qa = retrieval_qa_chain(llm, qa_prompt, db)
-    return qa
+    return qa, llm
 
 def main():
-    qa = qa_bot()
+    qa, llm_handler = qa_bot()
+    print('We are using this model: ')
+    print(llm_model)
     query = config['llm_cpp']['query']
     print("------------------")
     print(query)   
