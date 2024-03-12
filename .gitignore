@@ -2,3 +2,4 @@
 scripts/*.wav
 vectorstore/
 models/
+*.wav

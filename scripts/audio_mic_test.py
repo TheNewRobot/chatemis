@@ -1,13 +1,15 @@
 import pyaudio
 import speech_recognition as sr
 import pyttsx3
+import sys
 
 # TODO: Include a simple function to print and say the same thing!
 # Constants
 MODE = 0
-ENERGY_THRESHOLD = 6000
-PHRASE_TIME_LIMIT = 3 # seconds
+ENERGY_THRESHOLD = 2000 # Sensitive Microphones in loud rooms might set this to 4000 (good starting point)
+PHRASE_TIME_LIMIT = 2 # seconds
 
+sys.stderr = open('/dev/null', 'w')
 r = sr.Recognizer()
 mic = sr.Microphone()
 
@@ -23,7 +25,8 @@ engine.runAndWait()
 # sr.Microphone.list_microphone_names()
 
 with mic as source:
-    r.adjust_for_ambient_noise(source)
+    print("Calibration...\n")
+    r.adjust_for_ambient_noise(source, duration=2.5)
     print("Listening...")
     audio = r.listen(source, phrase_time_limit=PHRASE_TIME_LIMIT)
 
