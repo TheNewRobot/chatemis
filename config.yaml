@@ -1,6 +1,6 @@
 tokenizer:
-  data_path: '../data/'
-  db_faiss_path: '../vectorstore/db_faiss'
+  data_path: 'data/'
+  db_faiss_path: 'vectorstore/db_faiss'
   instructor_embeddings: "hkunlp/instructor-xl"
   text_spliter:
     separator: "\n\n"
@@ -8,7 +8,7 @@ tokenizer:
     chunk_overlap: 400
     is_separator: True
 llm_cpp:
-  model_path: "../models/llama_2_7b_f16.gguf"
+  model_path: "models/llama_2_13b_q8.gguf"
   query: "What type of sensors does ARTEMIS have?"
   custom_prompt_template: |
       Use the following pieces of information to answer the user's question as a casual conversation.

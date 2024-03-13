@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-from os import system
-# import pyaudio
+from os import system 
+import pyaudio
 import speech_recognition as sr
-from playsound import playsound
 from gpt4all import GPT4All
 import sys
 import whisper
@@ -12,17 +11,28 @@ import time
 import os
 # For Ubuntu
 import pyttsx3
+from scripts.llm_cpp import LLM_object
 
 # We can consider using the warning library to delete the warning logs 
 
 wake_word = 'computer' # Don't move the microphone in your headset 
 listening_for_wake_word = True
+GPT = False
+
 # Download the model from the GPT4All application
-model = GPT4All('/root/.local/share/nomic.ai/GPT4All/Nous-Hermes-2-Mistral-7B-DPO.Q4_0.gguf', allow_download=False)
+if GPT:
+    model = GPT4All('/root/Arturo/mistral-7b-instruct-v0.1.Q4_0.gguf', allow_download=False)
+else:
+    llama2 = LLM_object("config.yaml")
+    llama2.check_cuda()
+    model = llama2.qa_bot()
+    print('We are using this model: ')
+    print(llama2.llm_model)
 r = sr.Recognizer()
 # Run this code for the first time
 # tiny_model = whisper.load_model('tiny')   
 # base_model = whisper.load_model('base')
+# breakpoint()
 # Continuously run the code using the cached files in this path
 tiny_model_path = os.path.expanduser('/root/.cache/whisper/tiny.pt')
 base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
@@ -31,14 +41,14 @@ base_model = whisper.load_model(base_model_path)
 source = sr.Microphone()
 
 # tiktoken is frozen so it can load the vocab and the token from cached files, so we can use it online 
-engine = pyttsx3.init('espeak')
+engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
 engine.setProperty('rate', 200)
 engine.setProperty('volume', 3.0) 
 print("=====================Artemis Assistant=====================")
 print("Hello Sir. What can I do for you?")
-engine.say("Hello Sir. What can I do for you?")
-engine.runAndWait()
+#engine.say("Hello Sir. What can I do for you?")
+#engine.runAndWait()
 
 def speak(text):
     engine.say(text)
@@ -52,6 +62,7 @@ def listen_for_wake_word(audio):
     text_input = result['text']
     if wake_word in text_input.lower().strip():
         print("Wake word detected. Please speak your prompt to GPT4All.")
+        print('Listening')
         speak('Listening')
         listening_for_wake_word = False
 
@@ -68,8 +79,13 @@ def prompt_gpt(audio):
             listening_for_wake_word = True
         else:
             print('User: ' + prompt_text)
-            output = model.generate(prompt_text, max_tokens=200)
-            print('GPT4All: ', output)
+            if GPT:
+                output = model.generate(prompt_text, max_tokens=100)
+                print('GPT4All: ', output)
+            else:
+                output = model.invoke({'query': prompt_text})
+                output = output['result']
+                print('Llama2: ', output)
             speak(output)
             print('\nSay', wake_word, 'to wake me up. \n')
             listening_for_wake_word = True
@@ -92,11 +108,10 @@ def callback(recognizer, audio):
 def start_listening():
     with source as s:
         print('\nCalibration... \n')
-        r.adjust_for_ambient_noise(s, duration=2)
-    print('\nSay ', wake_word, ' to wake me up. \n')
-    stop_listening = r.listen_in_background(source, callback)
+        r.adjust_for_ambient_noise(s, duration=2)   
+    print('\nSay', wake_word, 'to wake me up. \n')
+    stop_flag = r.listen_in_background(source, callback)
     for _ in range(200): time.sleep(0.1)
-    stop_listening(wait_for_stop=False)
     print('\nThe Assistant has gone to sleep. \n')
 
 if __name__ == '__main__':

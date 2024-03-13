@@ -3,3 +3,4 @@ scripts/*.wav
 vectorstore/
 models/
 *.wav
+scripts/__pycache__/
