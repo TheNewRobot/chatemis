@@ -18,7 +18,7 @@ from scripts.llm_cpp import LLM_object
 wake_word = 'computer' # Don't move the microphone in your headset 
 listening_for_wake_word = True
 GPT = False
-
+print("============================Initialization============================")
 # Download the model from the GPT4All application
 if GPT:
     model = GPT4All('/root/Arturo/mistral-7b-instruct-v0.1.Q4_0.gguf', allow_download=False)
@@ -45,8 +45,6 @@ engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
 engine.setProperty('rate', 200)
 engine.setProperty('volume', 3.0) 
-print("=====================Artemis Assistant=====================")
-print("Hello Sir. What can I do for you?")
 #engine.say("Hello Sir. What can I do for you?")
 #engine.runAndWait()
 
@@ -61,7 +59,7 @@ def listen_for_wake_word(audio):
     result = tiny_model.transcribe('wake_detect.wav')
     text_input = result['text']
     if wake_word in text_input.lower().strip():
-        print("Wake word detected. Please speak your prompt to GPT4All.")
+        print("Wake word detected. Please speak your prompt to Artemis!")
         print('Listening')
         speak('Listening')
         listening_for_wake_word = False
@@ -108,7 +106,9 @@ def callback(recognizer, audio):
 def start_listening():
     with source as s:
         print('\nCalibration... \n')
-        r.adjust_for_ambient_noise(s, duration=2)   
+        r.adjust_for_ambient_noise(s, duration=2) 
+    print("============================Artemis Assistant============================")
+    print("Hello Sir. What can I do for you?")   
     print('\nSay', wake_word, 'to wake me up. \n')
     stop_flag = r.listen_in_background(source, callback)
     for _ in range(200): time.sleep(0.1)

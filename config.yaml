@@ -8,7 +8,7 @@ tokenizer:
     chunk_overlap: 400
     is_separator: True
 llm_cpp:
-  model_path: "models/llama_2_13b_q8.gguf"
+  model_path: "models/llama_2_7b_f16.gguf"
   query: "What type of sensors does ARTEMIS have?"
   custom_prompt_template: |
       Use the following pieces of information to answer the user's question as a casual conversation.
@@ -20,8 +20,8 @@ llm_cpp:
   load_llm: 
     n_gpu_layers: -1
     n_batch: 512 # This will tune the speed of processing the answer
-    max_tokens: 150
-    top_p: 0.9
+    max_tokens: 100
+    top_p: 0.8
     repeat_penalty: 4.0
     top_k: 10 # 
     n_ctx: 424 
