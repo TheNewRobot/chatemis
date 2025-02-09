@@ -13,7 +13,7 @@ XAUTH=/tmp/.docker.xauth
 # you have to run this in a ROS-based environment to work, otherwise you will get an error in line --env
 
 docker run -it \
-    --name=demo_container \
+    --name=chatemis \
     --network="host" \
     --env="DISPLAY=$DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \

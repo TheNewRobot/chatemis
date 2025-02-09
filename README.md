@@ -19,3 +19,15 @@ and comment this lines in /usr/share/alsa/alsa.conf
 # pcm.surround51 cards.pcm.surround51
 # pcm.surround71 cards.pcm.surround71
 ```
+Start the docker container
+```
+docker start chatemis
+```
+check if it's running
+```
+docker ps -l
+```
+run it again with this command (in different terminals, if you want)
+```
+docker exec -it chatemis /bin/bash
+```
