@@ -1,33 +1,93 @@
-# Instruction in how to run this one
-Don't forget to install alsa
+# RoMeLa ChatBots!
 
-# Test audio 
-It is highly recommended to first run <audio_mic_test.py> to see that everything is working. then you can play with alsa the following file
+## Overview
+
+RoMeLa ChatBots is a simple, efficient chatbot system designed for RoMeLa's robotic platforms including ARTEMIS, Darwin, and COSMO. The project implements a Retrieval-Augmented Generation (RAG) system that allows robots to engage in intelligent Q&A interactions during demonstrations, drawing from a knowledge base built from alumni theses and research papers.
+
+<div align="center">
+  <img src="images/demo_ref.png" alt="RoMeLa Robot Demo" width="300">
+  <p><em>RoMeLa Robot Demo Interaction</em></p>
+</div>
+
+TODOs:
++ Optimize the code:
+  - Improve the relative imports in the yaml file
+  - Create a pipeline for importing and quantizing models from Hugging Face to make them lightweight for the Jetson Orin Nano
+  - Automate this optimization process
++ Restructure the project to make it easier to add new robots as they're built and need to be integrated into the system
++ Create a bash file to automate and unify the installation process. Note: The main environment was derived from this video: https://www.youtube.com/watch?v=6zAk0KHmiGw
++ Implement automatic fetching and loading of new LLMs based on their names (we can check Hugging Face, but models should be compatible with llama.cpp)
++ Automate the creation process in Docker
+
+
+## System Requirements
+
+- Ubuntu 22.04 LTS
+- Python 3.10.12
+- CUDA 12.4
+- Jetson Orin Nano (for deployment)
+
+
+## Quick Start
+
+### 1. Environment Setup
+
+Create and activate a Python virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
+### 2. Audio System verification
+Test your audio setup before running the main application:
+
+```
+python audio_mic_test.py
+# Verify the recorded audio
 aplay speech.wav
 ```
-and comment this lines in /usr/share/alsa/alsa.conf
+
+### 3. Initial configuration
+
+1. Generate the vector database (first-time setup):
+```
+python scripts/tokenizer.py
+```
+
+2. Download an LLM model:
+- Select a model compatible with llama.cpp CUDA
+- Place it in the models/ directory
+- Update the model path in config.yaml
+
+3. Start the application:
+```
+python main.py 
+```
+For further reading you can check the `llm_cpp.py` class which is the llm hanlder!
+
+## Docker Deployment
+
+### If we're using Docker (TODO)
 
 ```
-# pcm.rear cards.pcm.rear
-# pcm.center_lfe cards.pcm.center_lfe
-# pcm.side cards.pcm.side
-# pcm.surround21 cards.pcm.surround21
-# pcm.surround40 cards.pcm.surround40
-# pcm.surround41 cards.pcm.surround41
-# pcm.surround50 cards.pcm.surround50
-# pcm.surround51 cards.pcm.surround51
-# pcm.surround71 cards.pcm.surround71
+docker build -t chatemis .
 ```
-Start the docker container
+### Run the container for the first time 
 ```
+./docker/run_docker_gpu.bash
+```
+### Managing the Container
+```
+# Start the container
 docker start chatemis
-```
-check if it's running
-```
+
+# Verify container status
 docker ps -l
-```
-run it again with this command (in different terminals, if you want)
-```
+
+# Access the container
 docker exec -it chatemis /bin/bash
 ```
+
+
+
