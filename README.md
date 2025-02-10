@@ -2,10 +2,10 @@
 
 ## Overview
 
-RoMeLa ChatBots is a simple, efficient chatbot system designed for RoMeLa's robotic platforms including ARTEMIS, Darwin, and COSMO. The project implements a Retrieval-Augmented Generation (RAG) system that allows robots to engage in intelligent Q&A interactions during demonstrations, drawing from a knowledge base built from alumni theses and research papers.
+RoMeLa ChatBots is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots ARTEMIS and COSMO, DARwIn, and other laboratory robots. The system aims to implement a retrieval-based architecture that will enable robots to engage in natural and informative conversations during laboratory demonstrations. By leveraging a knowledge base built from alumni theses and research publications specific to each robot, the system will allow robots to provide accurate, technical responses while maintaining engaging interactions with visitors.
 
 <div align="center">
-  <img src="images/demo_ref.png" alt="RoMeLa Robot Demo" width="300">
+  <img src="images/web.news_.robotmakers.BJM_.a.jpg" alt="RoMeLa Robot Demo" width="600" height="400">
   <p><em>RoMeLa Robot Demo Interaction</em></p>
 </div>
 
