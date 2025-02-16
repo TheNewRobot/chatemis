@@ -47,6 +47,7 @@ engine.setProperty('voice', 'english-us')
 engine.setProperty('rate', 125)
 engine.setProperty('volume', 3.0) 
 
+
 def print_and_speak(text):
 	print(text)
 	engine.say(text)

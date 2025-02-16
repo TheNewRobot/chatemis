@@ -1,0 +1,33 @@
+tokenizer:
+  data_path: "./data/"
+  db_faiss_path: '~/brandon/chatemis/vectorstore'
+  instructor_embeddings: "hkunlp/instructor-xl"
+  text_spliter:
+    separator: "\n\n"
+    chunk_size: 600
+    chunk_overlap: 400
+    is_separator: True
+llm_cpp:
+  model_path: "~/brandon/chatemis/models/Qwen2.5-VL-3B-Instruct.safetensors"
+  query: "What type of sensors does ARTEMIS have?"
+  custom_prompt_template: |
+      Use the following pieces of information to answer the user's question as a casual conversation.
+      Don't cite or mention any references from the text or figures. 
+      Context: {context}
+      Question: {question}
+      Only return helpful and gramatically correct answers below.
+      Helpful answer:
+  load_llm: 
+    n_gpu_layers: -1
+    n_batch: 512 # This will tune the speed of processing the answer
+    max_tokens: 100
+    top_p: 0.8
+    repeat_penalty: 4.0
+    top_k: 10 # 
+    n_ctx: 424 
+    temperature: 0.4
+    verbose: False
+    
+# How are you feeling today ARTEMIS?
+# What type of sensors does ARTEMIS have?
+

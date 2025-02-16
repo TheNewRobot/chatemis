@@ -8,9 +8,9 @@ import pickle
 from langchain_community.vectorstores import FAISS # pip install faiss_gpu 
 import yaml
 
-import nltk
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
+#import nltk
+#nltk.download('punkt_tab')
+#nltk.download('averaged_perceptron_tagger_eng')
 
 class Tokenizer:
     def __init__(self, config_path):
@@ -57,8 +57,8 @@ class Tokenizer:
         db = FAISS.from_documents(texts, instructor_embeddings)
         db.save_local(self.index_path)
 
-if __name__=='__main__':
-    tokenizer = Tokenizer("../config.yaml")
+if __name__ == "__main__":
+    tokenizer = Tokenizer("./config.yaml")
     tokenizer.check_cuda()
     docs = tokenizer.load_data()
     texts = tokenizer.split_into_chunks(docs)
