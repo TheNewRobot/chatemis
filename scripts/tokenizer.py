@@ -1,8 +1,8 @@
 # pip install langchain
 from langchain_community.document_loaders import DirectoryLoader # pip install "unstructured[local-inference]" This install torch 
 import torch
-from langchain.text_splitter import CharacterTextSplitter
-from InstructorEmbedding import INSTRUCTOR # pip install InstructorEmbedding #pip install sentence-transformers==2.2.2 (we should use this specific version)
+from langchain_text_splitters import CharacterTextSplitter
+from InstructorEmbedding import INSTRUCTOR # pip install InstructorEmbedding #pip install sentence-transformers==2.4.0 (we should use this specific version)
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 import pickle
 from langchain_community.vectorstores import FAISS # pip install faiss_gpu 
@@ -53,7 +53,8 @@ class Tokenizer:
     def store_embeddings(self,texts,device):
         # Embedddings
         instructor_embeddings = HuggingFaceInstructEmbeddings(model_name=self.model_name,
-                                                            model_kwargs={"device":device})
+                                                            model_kwargs={"device":device},
+                                                            encode_kwargs = {'normalize_embeddings': True})
         db = FAISS.from_documents(texts, instructor_embeddings)
         db.save_local(self.index_path)
 
