@@ -9,10 +9,16 @@ import whisper
 import warnings 
 import time
 import os
+import yaml
 # For Ubuntu
 import pyttsx3
+import torch
 from ollama import ChatResponse, chat
-from './scripts/tokenizer' import Tokenizer 
+from langchain.chains import RetrievalQA
+from langchain_community.llms import Ollama
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+
 #from scripts.llm_cpp import LLM_object
 
 # We can consider using the warning library to delete the warning logs 
@@ -40,8 +46,8 @@ r = sr.Recognizer()
 tiny_model = whisper.load_model('tiny.en')
 base_model = whisper.load_model('base.en')
 source = sr.Microphone()
-time_per_word = 0.4
-wait_for_speech = 1.5
+time_per_word = 0.6
+wait_for_speech = 2
 # tiktoken is frozen so it can load the vocab and the token from cached files, so we can use it online 
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
@@ -53,6 +59,33 @@ def print_and_speak(text):
 	print(text)
 	engine.say(text)
 	engine.runAndWait()
+	
+print_and_speak("Setting up RAG")
+# Create RetrievalQA
+llm = Ollama(model = "llama3.2")
+config_path = './config.yaml'
+with open(config_path, "r") as f:
+	config = yaml.safe_load(f)
+faiss_path = config['tokenizer']['db_faiss_path']
+embedding_model_name = config['tokenizer']['instructor_embeddings']
+device = None
+if torch.cuda.is_available():
+	device_name = torch.cuda.get_device_name(0)  
+	print("You are good to go with cuda! Device: ", device_name)
+	device = 'cuda'
+else:
+	print("You are good to go with cpu!")
+	device = 'cpu'
+model_kwargs = {"device": device}
+
+embeddings = HuggingFaceEmbeddings(
+    model_name=embedding_model_name,
+    model_kwargs=model_kwargs
+)
+vectorstore = FAISS.load_local(folder_path=faiss_path, embeddings=embeddings, allow_dangerous_deserialization=True)
+retriever = vectorstore.as_retriever()
+qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
+
 
 def listen_for_wake_word(audio):
     global listening_for_wake_word
@@ -79,6 +112,8 @@ def callback(recognizer, audio):
 		if wake_word in text_input.lower().strip():
 			print("Wake word detected. Please speak your prompt to Artemis!")
 			print_and_speak('Listening')
+			time.sleep(1.5)
+			audio = ""
 			listening_for_wake_word = False
 
 	else:
@@ -86,7 +121,7 @@ def callback(recognizer, audio):
 			time.sleep(wait_for_speech)
 			with open("prompt.wav", "wb") as f:
 				f.write(audio.get_wav_data())
-			result = tiny_model.transcribe('prompt.wav')
+			result = base_model.transcribe('prompt.wav')
 			prompt_text = result['text']
 			if len(prompt_text.strip()) == 0:
 				print_and_speak("Empty prompt. Please speak again.")
@@ -96,17 +131,15 @@ def callback(recognizer, audio):
 				print('User: ' + prompt_text)
 
 				print_and_speak("Processing...")
-				response: ChatResponse = chat(model='llama3.2', messages=[
-				  {
-				    'role': 'user',
-				    'content': prompt_text,
-				  },
-				])
-				print_and_speak(response.message.content)
-				time.sleep(len(response.message.content.split())*time_per_word)
+
+				response = qa.invoke(prompt_text)
+				print_and_speak(response['result'])
+				time.sleep(len(response['result'].split())*time_per_word)
 				listening_for_wake_word = True
 				processing = False
 				print_and_speak("\nSay " + wake_word + " to wake me up.\n")
+				with open("prompt.wav", "w") as f:
+					f.write("")
 			#except Exception as e:
 			#	print("Prompt error: ", e)
     #except:
@@ -115,7 +148,6 @@ def callback(recognizer, audio):
 
  
 def start_listening():
-
 	with source as s:
 		print_and_speak('\nCalibrating... \n')
 		r.adjust_for_ambient_noise(s, duration=2) 

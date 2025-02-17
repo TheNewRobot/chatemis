@@ -1,6 +1,6 @@
 tokenizer:
   data_path: "./data"
-  db_faiss_path: '~/brandon/chatemis/vectorstore'
+  db_faiss_path: './vectorstore'
   instructor_embeddings: "hkunlp/instructor-xl"
   text_spliter:
     separator: "\n\n"
@@ -8,7 +8,7 @@ tokenizer:
     chunk_overlap: 400
     is_separator: True
 llm_cpp:
-  model_path: "~/brandon/chatemis/models/Qwen2.5-VL-3B-Instruct.safetensors"
+  model_path: "./models/Qwen2.5-VL-3B-Instruct.safetensors"
   query: "What type of sensors does ARTEMIS have?"
   custom_prompt_template: |
       Use the following pieces of information to answer the user's question as a casual conversation.
