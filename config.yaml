@@ -1,6 +1,6 @@
 tokenizer:
-  data_path: "/root/Arturo/chatemis/data/"
-  db_faiss_path: '/root/Arturo/chatemis/vectorstore/db_faiss'
+  data_path: "./data"
+  db_faiss_path: '~/brandon/chatemis/vectorstore'
   instructor_embeddings: "hkunlp/instructor-xl"
   text_spliter:
     separator: "\n\n"
@@ -8,7 +8,7 @@ tokenizer:
     chunk_overlap: 400
     is_separator: True
 llm_cpp:
-  model_path: "/root/Arturo/chatemis/models/llama_2_7b_f16.gguf"
+  model_path: "~/brandon/chatemis/models/Qwen2.5-VL-3B-Instruct.safetensors"
   query: "What type of sensors does ARTEMIS have?"
   custom_prompt_template: |
       Use the following pieces of information to answer the user's question as a casual conversation.
@@ -30,3 +30,4 @@ llm_cpp:
     
 # How are you feeling today ARTEMIS?
 # What type of sensors does ARTEMIS have?
+
