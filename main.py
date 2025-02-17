@@ -15,8 +15,8 @@ import pyttsx3
 import torch
 from ollama import ChatResponse, chat
 from langchain.chains import RetrievalQA
-from langchain_community.llms import Ollama
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_ollama import OllamaLLM
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
 #from scripts.llm_cpp import LLM_object
@@ -46,8 +46,8 @@ r = sr.Recognizer()
 tiny_model = whisper.load_model('tiny.en')
 base_model = whisper.load_model('base.en')
 source = sr.Microphone()
-time_per_word = 0.6
-wait_for_speech = 2
+time_per_word = 0.3
+wait_for_speech = 3
 # tiktoken is frozen so it can load the vocab and the token from cached files, so we can use it online 
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
@@ -62,7 +62,7 @@ def print_and_speak(text):
 	
 print_and_speak("Setting up RAG")
 # Create RetrievalQA
-llm = Ollama(model = "llama3.2")
+llm = OllamaLLM(model = "llama3.2")
 config_path = './config.yaml'
 with open(config_path, "r") as f:
 	config = yaml.safe_load(f)
@@ -87,24 +87,10 @@ retriever = vectorstore.as_retriever()
 qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever)
 
 
-def listen_for_wake_word(audio):
-    global listening_for_wake_word
-    with open("wake_detect.wav", "wb") as f:
-        f.write(audio.get_wav_data())
-    result = tiny_model.transcribe('wake_detect.wav')
-    text_input = result['text']
-    if wake_word in text_input.lower().strip():
-        print("Wake word detected. Please speak your prompt to Artemis!")
-        print('Listening')
-        speak('Listening')
-        listening_for_wake_word = False
-
-
-
 def callback(recognizer, audio):
 	#try:
 	global listening_for_wake_word, processing
-	if listening_for_wake_word:
+	if listening_for_wake_word and not processing:
 		with open("wake_detect.wav", "wb") as f:
 			f.write(audio.get_wav_data())
 		result = tiny_model.transcribe('wake_detect.wav')
@@ -137,15 +123,14 @@ def callback(recognizer, audio):
 				time.sleep(len(response['result'].split())*time_per_word)
 				listening_for_wake_word = True
 				processing = False
-				print_and_speak("\nSay " + wake_word + " to wake me up.\n")
+				#print_and_speak("\nSay " + wake_word + " to wake me up.\n")
 				with open("prompt.wav", "w") as f:
 					f.write("")
+				audio = ""
 			#except Exception as e:
 			#	print("Prompt error: ", e)
     #except:
     #    print("I couldn't understand the audio")
-
-
  
 def start_listening():
 	with source as s:
@@ -156,9 +141,9 @@ def start_listening():
 	print_and_speak('\nSay '+ wake_word+ ' to wake me up. \n')
 	while True:
 		stop_flag = r.listen_in_background(source, callback)
-		for _ in range(200): time.sleep(0.1)
-		if listening_for_wake_word and not processing:
-			print_and_speak('\nThe Assistant has gone to sleep. \n')
+		for _ in range(40): time.sleep(0.1)
+	#if listening_for_wake_word and not processing:
+	#print_and_speak('\nThe Assistant has gone to sleep. \n')
 
 if __name__ == '__main__':
     start_listening()
