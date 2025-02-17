@@ -66,6 +66,7 @@ langchain==0.3.18
 langchain-cli==0.0.35
 langchain-community==0.3.17
 langchain-core==0.3.35
+langchain-huggingface==0.1.2
 langchain-ollama==0.2.3
 langchain-text-splitters==0.3.6
 langdetect==1.0.9
@@ -144,7 +145,7 @@ safetensors==0.5.2
 scikit-learn==1.6.1
 scipy==1.15.1
 semantic-version==2.10.0
-sentence-transformers==2.4.0
+sentence-transformers==3.4.1
 sentencepiece==0.2.0
 setuptools==75.8.0
 setuptools-rust==1.10.2
