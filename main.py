@@ -35,7 +35,7 @@ CHANNELS = 1
 RATE = 44100
 CHUNK = 512
 WAVE_OUTPUT_FILENAME = "prompt.wav"
-device_index = 2
+INDEX = 36
 audio = pyaudio.PyAudio()
 warnings.filterwarnings("ignore")
 
@@ -65,7 +65,7 @@ base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
 base_model = whisper.load_model('base.en')
 source = sr.Microphone()
 time_per_word = 0.05
-wait_for_speech = 4
+wait_for_speech = 6
 # tiktoken is frozen so it can load the vocab and the token from cached files, so we can use it online 
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
@@ -122,16 +122,13 @@ qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retrieve
 qa_chain = LLMChain(llm=llm, prompt=prompt_template)
 
 def run_rag_with_memory(question: str) -> str:
-    # (a) Retrieve relevant documents.
     retrieved_docs = retriever.get_relevant_documents(question)
     context = "\n\n".join(doc.page_content for doc in retrieved_docs)
     
-    # (b) Prepare the conversation history.
     chat_history = ""
     for message in memory.chat_memory.messages:
         chat_history += f"{message.type.capitalize()}: {message.content}\n"
     
-    # (c) Build the inputs for the chain.
     input_data = {
         "system_prompt": sys_prompt,
         "chat_history": chat_history,
@@ -139,10 +136,9 @@ def run_rag_with_memory(question: str) -> str:
         "question": question,
     }
     
-    # (d) Get the answer from the LLMChain.
+
     answer = qa_chain.run(input_data)
     
-    # (e) Update memory with the new turn.
     memory.chat_memory.add_user_message(question)
     memory.chat_memory.add_ai_message(answer)
     
@@ -173,27 +169,37 @@ def start_listening():
 			
 			print_and_speak("Please state your question.")
 
-			stream = audio.open(format=FORMAT, channels=CHANNELS,
-					rate=RATE, input=True,input_device_index = 26,
-					frames_per_buffer=CHUNK)
-			Recordframes = []
+			recording = sd.rec(int(wait_for_speech * freq), samplerate=freq, channels=2)
+
+			# Record audio for the given number of seconds
+
+
+			sd.wait()
+
+
+			write(WAVE_OUTPUT_FILENAME, freq, recording)
+
+			#stream = audio.open(format=FORMAT, channels=CHANNELS,
+			#		rate=RATE, input=True,input_device_index = INDEX,
+			#		frames_per_buffer=CHUNK)
+			#Recordframes = []
 			 
-			for i in range(0, math.ceil(RATE / CHUNK * wait_for_speech)):
-			    data = stream.read(CHUNK)
-			    Recordframes.append(data)
+			#for i in range(0, math.ceil(RATE / CHUNK * wait_for_speech)):
+			    #data = stream.read(CHUNK)
+			    #Recordframes.append(data)
 			print_and_speak("Processing...")
 			 
-			stream.stop_stream()
-			stream.close()
+			#stream.stop_stream()
+			#stream.close()
 			
 			 
-			waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-			waveFile.setnchannels(CHANNELS)
-			waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-			audio.terminate()
-			waveFile.setframerate(RATE)
-			waveFile.writeframes(b''.join(Recordframes))
-			waveFile.close()
+			#waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+			#waveFile.setnchannels(CHANNELS)
+			#waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+			#audio.terminate()
+			#waveFile.setframerate(RATE)
+			#waveFile.writeframes(b''.join(Recordframes))
+			#waveFile.close()
 				
 			#try:
 			prompt = base_model.transcribe(WAVE_OUTPUT_FILENAME)['text']

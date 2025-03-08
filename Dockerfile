@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     libasound2-dev
 
 RUN apt-get update
+RUN apt -y install ffmpeg
 RUN apt-get -y install cmake
 RUN apt-get -y install python3-pyaudio
 RUN apt install -y portaudio19-dev
