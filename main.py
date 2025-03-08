@@ -224,14 +224,14 @@ def start_listening():
 			while len(prompt) == 0:
 				print_and_say("Question input is empty. Please try again.")
 				prompt = input()
-			if any(w in result for w in ['exit', 'quit', "shut down"]):
+			if any(w in prompt for w in ['exit', 'quit', "shut down"]):
 				print_and_speak("Shutting off...")
 				break
 			print_and_speak("Processing...")
 			response = run_rag_with_memory(prompt)
 			print_and_speak(response)
 
-			time.sleep(time_per_word*len(response['result']))
+			time.sleep(time_per_word*len(response))
 
 			#time.sleep(len(response['result'].split())*time_per_word)
 		else:
