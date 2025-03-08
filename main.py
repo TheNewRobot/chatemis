@@ -204,7 +204,7 @@ def start_listening():
 			#try:
 			prompt = base_model.transcribe(WAVE_OUTPUT_FILENAME)['text']
 
-			if any(w in prompt for w in ['exit', 'quit', "shut down"]):
+			if prompt.lower() == "shut down.":
 				print_and_speak("Shutting off...")
 				break
 			elif len(prompt.strip()) != 0:
@@ -224,7 +224,7 @@ def start_listening():
 			while len(prompt) == 0:
 				print_and_say("Question input is empty. Please try again.")
 				prompt = input()
-			if any(w in prompt for w in ['exit', 'quit', "shut down"]):
+			if prompt.lower() == "shut down.":
 				print_and_speak("Shutting off...")
 				break
 			print_and_speak("Processing...")
