@@ -26,7 +26,17 @@ import warnings
 import threading
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
+import pyaudio
+import wave
+import math
 
+FORMAT = pyaudio.paInt16
+CHANNELS = 1
+RATE = 44100
+CHUNK = 512
+WAVE_OUTPUT_FILENAME = "prompt.wav"
+device_index = 2
+audio = pyaudio.PyAudio()
 warnings.filterwarnings("ignore")
 
 #from scripts.llm_cpp import LLM_object
@@ -50,9 +60,9 @@ r = sr.Recognizer()
 # breakpoint()
 # Continuously run the code using the cached files in this path
 #tiny_model_path = os.path.expanduser('/root/.cache/whisper/tiny.pt')
-#base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
+base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
 #tiny_model = whisper.load_model('tiny.en')
-#base_model = whisper.load_model('base.en')
+base_model = whisper.load_model('base.en')
 source = sr.Microphone()
 time_per_word = 0.05
 wait_for_speech = 4
@@ -160,26 +170,47 @@ def start_listening():
 			
 			print_and_speak("Calibrating...")
 			time.sleep(2)
-			with source as s:
-				r.adjust_for_ambient_noise(s, duration=2)
-				print_and_speak("Please state your question.")
-				recording = r.record(s, duration=wait_for_speech)
-			try:
-				prompt = r.recognize_google(recording)
+			
+			print_and_speak("Please state your question.")
 
-				if any(w in prompt for w in ['exit', 'quit', "shut down"]):
-					print_and_speak("Shutting off...")
-					break
-				elif len(prompt.strip()) != 0:
-					print('User: ' + prompt)
+			stream = audio.open(format=FORMAT, channels=CHANNELS,
+					rate=RATE, input=True,input_device_index = 26,
+					frames_per_buffer=CHUNK)
+			Recordframes = []
+			 
+			for i in range(0, math.ceil(RATE / CHUNK * wait_for_speech)):
+			    data = stream.read(CHUNK)
+			    Recordframes.append(data)
+			print_and_speak("Processing...")
+			 
+			stream.stop_stream()
+			stream.close()
+			
+			 
+			waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+			waveFile.setnchannels(CHANNELS)
+			waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+			audio.terminate()
+			waveFile.setframerate(RATE)
+			waveFile.writeframes(b''.join(Recordframes))
+			waveFile.close()
+				
+			#try:
+			prompt = base_model.transcribe(WAVE_OUTPUT_FILENAME)['text']
 
-					print_and_speak("Processing...")
-					response = run_rag_with_memory(prompt)
-					print_and_speak(response)
+			if any(w in prompt for w in ['exit', 'quit', "shut down"]):
+				print_and_speak("Shutting off...")
+				break
+			elif len(prompt.strip()) != 0:
+				print('User: ' + prompt)
 
-					time.sleep(time_per_word*len(response))
-			except: 
-				pass
+			
+				response = run_rag_with_memory(prompt)
+				print_and_speak(response)
+
+				time.sleep(time_per_word*len(response))
+			#except: 
+				#pass
 		elif 'k' in mode.lower():
 			print("Write your question here: ")
 			

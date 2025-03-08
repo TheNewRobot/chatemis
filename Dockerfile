@@ -21,6 +21,12 @@ RUN python -m venv env
 ENV PATH="/app/env/bin:$PATH"
 
 # Install dependencies
+RUN apt-get update && apt-get install -y \
+    portaudio19-dev \
+    alsa-utils \
+    pulseaudio \
+    libasound2-dev
+
 RUN apt-get update
 RUN apt-get -y install cmake
 RUN apt-get -y install python3-pyaudio
