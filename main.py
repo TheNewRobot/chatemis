@@ -30,13 +30,6 @@ import pyaudio
 import wave
 import math
 
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-CHUNK = 512
-WAVE_OUTPUT_FILENAME = "prompt.wav"
-INDEX = 36
-audio = pyaudio.PyAudio()
 warnings.filterwarnings("ignore")
 
 #from scripts.llm_cpp import LLM_object
@@ -64,15 +57,16 @@ base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
 #tiny_model = whisper.load_model('tiny.en')
 base_model = whisper.load_model('base.en')
 source = sr.Microphone()
-time_per_word = 0.05
-wait_for_speech = 6
-# tiktoken is frozen so it can load the vocab and the token from cached files, so we can use it online 
+
+
+config_path = './config.yaml'
+with open(config_path, "r") as f:
+	config = yaml.safe_load(f)
+	
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
-engine.setProperty('rate', 190)
-engine.setProperty('volume', 3.0) 
-# Sampling frequency
-freq = 44100
+engine.setProperty('rate', config['ollama']['rate'])
+engine.setProperty('volume',config['ollama']['volume']) 
 
 	
 def print_and_speak(text):
@@ -81,14 +75,19 @@ def print_and_speak(text):
 	engine.runAndWait()
 	
 print_and_speak("Setting up...")
-
-config_path = './config.yaml'
-with open(config_path, "r") as f:
-	config = yaml.safe_load(f)
 max_words = int(config['ollama']['word_count'])
 faiss_path = config['tokenizer']['db_faiss_path']
 embedding_model_name = config['tokenizer']['instructor_embeddings']
 mode = config['ollama']['mode']
+FORMAT = pyaudio.paInt16
+CHANNELS = config['ollama']['channels']
+RATE = config['ollama']['rate']
+CHUNK = config['ollama']['chunk']
+WAVE_OUTPUT_FILENAME = config['ollama']['wave_filename']
+INDEX = config['ollama']['index']
+audio = pyaudio.PyAudio()
+time_per_word = config['ollama']['time_per_word']
+wait_for_speech = config['ollama']['wait_for_speech']
 sys_prompt = config['ollama']['system_prompt'] + "\n\nPlease keep all of your responses within " + str(max_words) + " words."
 # Create RetrievalQA
 llm = OllamaLLM(model = config['ollama']['model'], system=sys_prompt)
@@ -145,23 +144,11 @@ def run_rag_with_memory(question: str) -> str:
     return answer
 
 def start_listening():
-	#with source as s:
-	#	print_and_speak('\nCalibrating... \n')
-	#	r.adjust_for_ambient_noise(s, duration=2) 
+	
 	print("============================Artemis Assistant============================")
 	print_and_speak("Hello! What can I do for you?")  
 
 	while True:
-
-		# Record audio for the given number of seconds
-		#sd.wait()
-		#write("recording0.wav", freq, recording)
-		#result = base_model.transcribe('recording0.wav')
-		#prompt_text = result['text']
-		#if count % 10 == 0:
-			#prompt = "You must keep your responses around " + str(max_words) + " words and follow these instructions when responding to all questions: " + config['ollama']['system_prompt'] + "\n\nAnswer this prompt: "
-		#else:
-			#prompt = ""
 		if 'v' in mode.lower():
 			
 			print_and_speak("Calibrating...")
@@ -224,7 +211,7 @@ def start_listening():
 			while len(prompt) == 0:
 				print_and_say("Question input is empty. Please try again.")
 				prompt = input()
-			if prompt.lower() == "shut down.":
+			if prompt.lower() == "shut down":
 				print_and_speak("Shutting off...")
 				break
 			print_and_speak("Processing...")
@@ -237,8 +224,7 @@ def start_listening():
 		else:
 			print("Invalid mode set. Modify the 'mode' value in the config.yaml file to resolve this.")
 		prompt = ""
-	#if listening_for_wake_word and not processing:
-	#print_and_speak('\nThe Assistant has gone to sleep. \n')
+
 
 if __name__ == '__main__':
     start_listening()

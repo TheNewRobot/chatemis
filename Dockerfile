@@ -10,8 +10,11 @@ COPY main.py .
 COPY config.yaml .
 RUN mkdir -p  /app/vectorstore
 RUN mkdir -p  /app/data
-COPY /vectorstore/index.faiss ./vectorstore
-COPY /vectorstore/index.pkl ./vectorstore
+
+# Uncomment this if you already tokenized your documents
+C#OPY /vectorstore/index.faiss ./vectorstore
+#COPY /vectorstore/index.pkl ./vectorstore
+
 COPY /data/data.pdf ./data
 COPY scripts/tokenizer.py ./scripts/
 COPY scripts/audio_mic_test.py ./scripts/
@@ -37,8 +40,8 @@ RUN pip install --upgrade pip
 RUN pip install --no-deps -r requirements.txt
 RUN apt install -y espeak-ng
 
-# Run the tokenizer script
-#RUN python scripts/tokenizer.py
+# Run the tokenizer script (Remove this if you already tokenized your documents)
+RUN python scripts/tokenizer.py
 
 # Run the main application
 CMD ["python", "main.py"]
