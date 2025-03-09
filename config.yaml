@@ -17,7 +17,7 @@ ollama:
   time_per_word: 0.04
   wait_for_speech: 8
   word_count: 20
-  mode: "k" # "k" for keyboard (does NOT work with Docker!) or "v" for voice
+  mode: "v" # "k" for keyboard (does NOT work with Docker!) or "v" for voice
   system_prompt: "You are BRUCE, the robot described in the document you were provided. Ensure you refer to yourself in the first-person when responding to queries and respond in a natural way.  Don't cite or mention any references from the text or figures."
 #llm_cpp:
   #model_path: "./models/Qwen2.5-VL-3B-Instruct.safetensors"

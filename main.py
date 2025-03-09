@@ -41,13 +41,7 @@ warnings.filterwarnings("ignore")
 listening_for_wake_word = True
 processing = False
 print("============================Initialization============================")
-# Download the model from the GPT4All application
 
-#    llama2 = LLM_object("config.yaml")
-#    llama2.check_cuda()
-#    model = llama2.qa_bot()
-#    print('We are using this model: ')
-#    print(llama2.llm_model)
 r = sr.Recognizer()
 # Run this code for the first time
 # breakpoint()
@@ -81,7 +75,7 @@ embedding_model_name = config['tokenizer']['instructor_embeddings']
 mode = config['ollama']['mode']
 FORMAT = pyaudio.paInt16
 CHANNELS = config['ollama']['channels']
-RATE = config['ollama']['rate']
+RATE = int(config['ollama']['rate'])
 CHUNK = config['ollama']['chunk']
 WAVE_OUTPUT_FILENAME = config['ollama']['wave_filename']
 INDEX = config['ollama']['index']
@@ -151,42 +145,31 @@ def start_listening():
 	while True:
 		if 'v' in mode.lower():
 			
-			print_and_speak("Calibrating...")
 			time.sleep(2)
 			
 			print_and_speak("Please state your question.")
 
-			recording = sd.rec(int(wait_for_speech * freq), samplerate=freq, channels=2)
-
-			# Record audio for the given number of seconds
-
-
-			sd.wait()
-
-
-			write(WAVE_OUTPUT_FILENAME, freq, recording)
-
-			#stream = audio.open(format=FORMAT, channels=CHANNELS,
-			#		rate=RATE, input=True,input_device_index = INDEX,
-			#		frames_per_buffer=CHUNK)
-			#Recordframes = []
+			stream = audio.open(format=FORMAT, channels=CHANNELS,
+					rate=RATE, input=True,input_device_index = INDEX,
+					frames_per_buffer=CHUNK)
+			Recordframes = []
 			 
-			#for i in range(0, math.ceil(RATE / CHUNK * wait_for_speech)):
-			    #data = stream.read(CHUNK)
-			    #Recordframes.append(data)
+			for i in range(0, math.ceil(RATE / CHUNK * wait_for_speech)):
+			    data = stream.read(CHUNK)
+			    Recordframes.append(data)
 			print_and_speak("Processing...")
 			 
-			#stream.stop_stream()
-			#stream.close()
+			stream.stop_stream()
+			stream.close()
 			
 			 
-			#waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-			#waveFile.setnchannels(CHANNELS)
-			#waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-			#audio.terminate()
-			#waveFile.setframerate(RATE)
-			#waveFile.writeframes(b''.join(Recordframes))
-			#waveFile.close()
+			waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+			waveFile.setnchannels(CHANNELS)
+			waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+			audio.terminate()
+			waveFile.setframerate(RATE)
+			waveFile.writeframes(b''.join(Recordframes))
+			waveFile.close()
 				
 			#try:
 			prompt = base_model.transcribe(WAVE_OUTPUT_FILENAME)['text']
@@ -219,8 +202,6 @@ def start_listening():
 			print_and_speak(response)
 
 			time.sleep(time_per_word*len(response))
-
-			#time.sleep(len(response['result'].split())*time_per_word)
 		else:
 			print("Invalid mode set. Modify the 'mode' value in the config.yaml file to resolve this.")
 		prompt = ""
