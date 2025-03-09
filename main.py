@@ -65,8 +65,8 @@ with open(config_path, "r") as f:
 	
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
-engine.setProperty('rate', config['ollama']['rate'])
-engine.setProperty('volume',config['ollama']['volume']) 
+engine.setProperty('rate', 190)
+engine.setProperty('volume',3.0) 
 
 	
 def print_and_speak(text):

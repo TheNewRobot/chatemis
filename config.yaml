@@ -9,13 +9,11 @@ tokenizer:
     is_separator: True
 ollama:
   model: "llama3.2"
-  rate: 190
-  volume: 3.0
   channels: 1
   rate: 44100
   chunk: 512
   wave_filename: "prompt.wav"
-  index: 36
+  index: 0
   time_per_word: 0.04
   wait_for_speech: 8
   word_count: 20
