@@ -90,8 +90,7 @@ Note: Ensure your RAG data is in the data folder before running this command
 
 2. Download an LLM model:
 - Select a model compatible with ollama CUDA
-- Place it in the models/ directory
-- Update the model path in config.yaml
+- Write the name of the model in config.yaml in the "model" field
 
 3. Start the application:
 ```
