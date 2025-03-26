@@ -78,8 +78,6 @@ Test your audio setup before running the main application:
 
 ```
 python ./scripts/audio_mic_test.py
-# Verify the recorded audio
-aplay speech.wav
 ```
 
 ### 4. Initial configuration
