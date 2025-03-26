@@ -38,6 +38,7 @@ RUN apt-get update
 RUN pip install --global-option='build_ext' --global-option='-I/usr/local/include' --global-option='-L/usr/local/lib' pyaudio 
 RUN pip install --upgrade pip
 RUN pip install --no-deps -r requirements.txt
+RUN pip install langchain-huggingface==0.1.2
 RUN apt install -y espeak-ng
 
 # Run the tokenizer script (Remove this if you already tokenized your documents)
