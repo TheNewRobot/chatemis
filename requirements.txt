@@ -139,6 +139,7 @@ jupyterlab-flake8==0.7.1
 jupyterlab_pygments==0.3.0
 kiwisolver==1.4.5
 langchain==0.1.9
+langchain-huggingface==0.1.2
 langchain-community==0.0.22
 langchain-core==0.1.26
 langdetect==1.0.9
