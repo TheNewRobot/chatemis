@@ -72,6 +72,7 @@ sudo apt install -y portaudio19-dev
 pip install --global-option='build_ext' --global-option='-I/usr/local/include' --global-option='-L/usr/local/lib' pyaudio 
 pip install --upgrade pip
 pip install --no-deps -r requirements.txt
+pip install langchain-huggingface==0.1.2
 sudo apt install -y espeak-ng
 ```
 ### 3. Audio System verification
