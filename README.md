@@ -89,7 +89,7 @@ python scripts/tokenizer.py
 Note: Ensure your RAG data is in the data folder before running this command
 
 2. Download an LLM model:
-- Select a model compatible with ollama CUDA
+- Select a model compatible with ollama CUDA: https://ollama.com/search
 - Write the name of the model in config.yaml in the "model" field
 
 3. Start the application:
