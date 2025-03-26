@@ -57,7 +57,6 @@ Create and activate a Python virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
 sudo apt-get update && sudo apt-get install -y \
     portaudio19-dev \
     alsa-utils \
@@ -78,7 +77,7 @@ sudo apt install -y espeak-ng
 Test your audio setup before running the main application:
 
 ```
-python audio_mic_test.py
+python ./scripts/audio_mic_test.py
 # Verify the recorded audio
 aplay speech.wav
 ```
