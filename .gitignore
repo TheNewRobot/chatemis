@@ -4,3 +4,4 @@ vectorstore/
 models/
 *.wav
 scripts/__pycache__/
+jetsonchat/
