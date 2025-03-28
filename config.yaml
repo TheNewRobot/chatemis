@@ -1,24 +1,81 @@
+# TOKENIZER CONFIGURATION
 tokenizer:
+  # Base directory for storing processed data
   data_path: "./data"
+  
+  # Path to store the FAISS vector database for embeddings
   db_faiss_path: './vectorstore'
+  
+  # Embedding model to use - instructor-xl is a powerful model for text representations
+  # Alternative options could include "sentence-transformers/all-mpnet-base-v2" or similar
   instructor_embeddings: "hkunlp/instructor-xl"
+  
+  # TEXT SPLITTER SETTINGS
   text_spliter:
+    # Empty lines will be used as natural breakpoints for chunks
     separator: "\n\n"
+    
+    # Maximum size in tokens for each text chunk
+    # Larger chunks retain more context but use more memory and processing time
     chunk_size: 600
+    
+    # Number of overlapping tokens between adjacent chunks
+    # Higher overlap helps maintain context across chunk boundaries
     chunk_overlap: 400
+    
+    # When True, chunks will break exactly at separator
+    # When False, chunks may break mid-paragraph to maintain exact size
     is_separator: True
+
+# OLLAMA MODEL CONFIGURATION
 ollama:
-  model: "llama3.2" # Based on ollama name
+  # Model name as defined in Ollama's repository
+  # Consider "mistral" or "llama3" for alternatives with different capabilities
+  model: "llama3.2"
+  
+  # AUDIO SETTINGS
+  # Number of audio channels (1=mono, 2=stereo)
   channels: 1
+  
+  # Audio sampling rate in Hz (CD quality is 44100)
   rate: 44100
+  
+  # Audio processing chunk size - affects latency and buffer size
   chunk: 512
+  
+  # Filename for temporarily storing voice prompt recordings
   wave_filename: "prompt.wav"
+  
+  # Audio device index (-1 usually means default device)
+  # Change to specific number if multiple audio devices are present
   index: -1
+  
+  # SPEECH GENERATION PARAMETERS
+  # Estimated time to pronounce each word (in seconds)
+  # Affects pacing of generated speech
   time_per_word: 0.04
+  
+  # Maximum seconds to wait for speech input before timing out
   wait_for_speech: 8
+  
+  # Target word count for responses
+  # Lower values produce more concise answers
   word_count: 20
-  mode: "v" # "k" for keyboard (does NOT work with Docker!) or "v" for voice
-  system_prompt: "You are BRUCE, the robot described in the document you were provided. Ensure you refer to yourself in the first-person when responding to queries and respond in a natural way.  Don't cite or mention any references from the text or figures."
+  
+  # INPUT MODE
+  # "k" for keyboard input (not compatible with Docker environments)
+  # "v" for voice input (works in all environments)
+  mode: "k"
+  
+  # PERSONALITY AND BEHAVIOR
+  # System prompt that defines the assistant's persona
+  # Customize this to change how the AI presents itself and behaves
+  system_prompt: "You are BRUCE, the robot described in the document you 
+                  were provided. Ensure you refer to yourself in the first-person when 
+                  responding to queries and respond in a natural way.  
+                  Don't cite or mention any references from the text or figures."
+
+# Legacy
 #llm_cpp:
   #model_path: "./models/Qwen2.5-VL-3B-Instruct.safetensors"
   #query: "What type of sensors does ARTEMIS have?"

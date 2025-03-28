@@ -40,7 +40,7 @@ TODOs:
 
 ## Quick Start
 
-### 1. Quick Setup
+### 1. Audio Source Check
 
 In the "Sound" tab:
 
@@ -83,17 +83,25 @@ python ./scripts/audio_mic_test.py
 ```
 python scripts/tokenizer.py
 ```
-Note: Ensure your RAG data is in the data folder before running this command
+Note: Ensure your RAG data is in the data folder before running this command. 
 
 2. Download an LLM model:
 - Select a model compatible with ollama CUDA: https://ollama.com/search
 - Write the name of the model in config.yaml in the "model" field
 
-3. Start the application:
+3. Adjust the parameters in config.yaml according to your application
+
+  Important parameters
+
+    - `mode`: Set to "k" for keyboard input or "v" for voice interaction
+    - `model`: Choose "llama3" for balance, "mistral" for speed, or "llama3.2:70b" for quality
+    - `word_count`: Controls response length (15-20: concise, 30-40: detailed)
+    - `chunk_size`: Affects RAG precision (smaller: 300-400) vs. context (larger: 600-1000)
+
+4. Start the main application:
 ```
 python main.py 
 ```
-For further reading you can check the `llm_cpp.py` class which is the llm hanlder!
 
 ## Docker Deployment
 

@@ -42,12 +42,9 @@ processing = False
 print("============================Initialization============================")
 
 r = sr.Recognizer()
-# Run this code for the first time
-# breakpoint()
 # Continuously run the code using the cached files in this path
 #tiny_model_path = os.path.expanduser('/root/.cache/whisper/tiny.pt')
 base_model_path = os.path.expanduser('/root/.cache/whisper/base.pt')
-#tiny_model = whisper.load_model('tiny.en')
 base_model = whisper.load_model('base.en')
 source = sr.Microphone()
 
