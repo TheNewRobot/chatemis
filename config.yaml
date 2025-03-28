@@ -65,7 +65,7 @@ ollama:
   # INPUT MODE
   # "k" for keyboard input (not compatible with Docker environments)
   # "v" for voice input (works in all environments)
-  mode: "k"
+  mode: "v"
   
   # PERSONALITY AND BEHAVIOR
   # System prompt that defines the assistant's persona
