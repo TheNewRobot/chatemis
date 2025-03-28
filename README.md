@@ -2,11 +2,16 @@
 
 ## Overview
 
-RoMeLa ChatBots is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots ARTEMIS and COSMO, DARwIn, and other laboratory robots. The system aims to implement a retrieval-based architecture that will enable robots to engage in natural and informative conversations during laboratory demonstrations. By leveraging a knowledge base built from alumni theses and research publications specific to each robot, the system will allow robots to provide accurate, technical responses while maintaining engaging interactions with visitors.
+RoMeLa ChatBots is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots ARTEMIS and COSMO, DARwIn, and other RoMeLa robots. The system aims to implement a retrieval-based architecture that will enable robots to engage in natural and informative conversations during laboratory demonstrations. By leveraging a knowledge base built from alumni theses and research publications specific to each robot, the system will allow robots to provide accurate, technical responses while maintaining engaging interactions with visitors.
 
 <div align="center">
   <img src="images/web.news_.robotmakers.BJM_.a.jpg" alt="RoMeLa Robot Demo" width="600" height="400">
   <p><em>RoMeLa Robot Demo Interaction</em></p>
+</div>
+
+<div align="center">
+  <img src="images/Jetson_Audio_Module.jpg" alt="RoMeLa Robot Demo" width="600" height="400">
+  <p><em>Jetson Audio Module, designed to be adapted to small, medium and large form factors </em></p>
 </div>
 
 TODOs:
@@ -24,26 +29,18 @@ TODOs:
 
 - Ubuntu 22.04 LTS
 - Python 3.10.12
-- CUDA 12.4
-- Jetson Orin Nano (for deployment)
+- CTK 12.6
+- nvidia-jetpack (6.0+b106)
+
+## Hardware Components 
+
+- Jetson Orin Nano + Audio Case (if you want us to release the CAD for the cute case, let us know!)
+-  [Waveshare Audio Card for Jetson Nano](https://www.waveshare.com/audio-card-for-jetson-nano.htm) - USB audio codec designed specifically for Jetson Nano that provides audio input/output capabilities. We have validated that this can also work for a Jetson Orin Nano.
 
 
 ## Quick Start
 
-### 1. Set CPU Clock
-
-1. Ensure the CPU clock is correct:
-
-```bash
-sudo hwclock --set --date="<current date>"
-sudo hwclock -s # Set system clock to the same as hardware clock
-```
-
-Note: The date must be set in the format YYYY-MM-DD HH:MM:SS
-
-2. Go to the "Settings" menu for the Jetson Nano Orin.
-
-In the Wi-Fi tab, ensure you are connected to the Wi-Fi network.
+### 1. Quick Setup
 
 In the "Sound" tab:
 
