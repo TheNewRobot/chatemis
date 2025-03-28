@@ -20,7 +20,7 @@ COPY /data/data.pdf ./data #Change data.pdf to your actual PDF name
 COPY scripts/tokenizer.py ./scripts/
 
 # Create and activate virtual environment
-RUN python -m venv env
+RUN python -m venv jetsonchat
 ENV PATH="/app/env/bin:$PATH"
 
 # Install dependencies
