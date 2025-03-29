@@ -59,7 +59,7 @@ with open(config_path, "r") as f:
 	
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
-engine.setProperty('rate', 190)
+engine.setProperty('rate', 230)
 engine.setProperty('volume',3.0) 
 
 	
