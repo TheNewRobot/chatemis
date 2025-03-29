@@ -11,12 +11,15 @@ COPY config.yaml .
 RUN mkdir -p  /app/vectorstore
 RUN mkdir -p  /app/data
 
-# Uncomment this if you already tokenized your documents
+# Uncomment these lines if you already tokenized your documents
 #COPY /vectorstore/index.faiss ./vectorstore
 #COPY /vectorstore/index.pkl ./vectorstore
 
-COPY /data/data.pdf ./data
+# Comment these lines out if you already tokenized your documents
+COPY /data/data.pdf ./data #Change data.pdf to your actual PDF name
 COPY scripts/tokenizer.py ./scripts/
+
+# Test audio
 COPY scripts/audio_mic_test.py ./scripts/
 
 # Create and activate virtual environment

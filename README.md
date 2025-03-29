@@ -89,6 +89,7 @@ aplay speech.wav
 ```
 python scripts/tokenizer.py
 ```
+Note: Ensure your RAG data is in the data folder before running this command
 
 2. Download an LLM model:
 - Select a model compatible with llama.cpp CUDA
@@ -103,13 +104,16 @@ For further reading you can check the `llm_cpp.py` class which is the llm hanlde
 
 ## Docker Deployment
 
-### If we're using Docker (TODO)
+### If we're using Docker
 
+1. Open the Dockerfile and change "data.pdf" to the actual name of your PDF in the "data" folder and comment/uncomment lines as needed.
+
+2. Run the following command to build the Docker environment:
 ```
 sudo docker build -t chatemis .
 ```
 
-### Managing the Container
+3. Run the following command to start the Docker environment:
 ```
 # Start the container
 sudo docker start chatemis
