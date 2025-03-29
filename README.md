@@ -92,7 +92,7 @@ python scripts/tokenizer.py
 Note: Ensure your RAG data is in the data folder before running this command
 
 2. Download an LLM model:
-- Select a model compatible with llama.cpp CUDA
+- Select a model compatible with ollama CUDA
 - Place it in the models/ directory
 - Update the model path in config.yaml
 
@@ -108,20 +108,14 @@ For further reading you can check the `llm_cpp.py` class which is the llm hanlde
 
 1. Open the Dockerfile and change "data.pdf" to the actual name of your PDF in the "data" folder and comment/uncomment lines as needed.
 
-2. Install Jetson Containers
-```bash
-git clone https://github.com/dusty-nv/jetson-containers
-bash jetson-containers/install.sh
-```
-
-3. Run the following command to build the Docker environment:
+2. Run the following command to build the Docker environment:
 ```bash
 sudo docker build -t chatemis .
 ```
 
-4. Run the following command to start the Docker environment:
+3. Run the following command to start the Docker environment with required pulseaudio information:
 ```bash
-# Start the container
+# Start and run the container
 sudo docker start chatemis
 
 sudo docker run -it --rm --privileged --device /dev/snd --runtime nvidia \
