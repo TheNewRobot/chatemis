@@ -108,15 +108,29 @@ For further reading you can check the `llm_cpp.py` class which is the llm hanlde
 
 1. Open the Dockerfile and change "data.pdf" to the actual name of your PDF in the "data" folder and comment/uncomment lines as needed.
 
-2. Run the following command to build the Docker environment:
+2. Install Jetson Containers
+```bash
+git clone https://github.com/dusty-nv/jetson-containers
+bash jetson-containers/install.sh
 ```
+
+3. Run the following command to build the Docker environment:
+```bash
 sudo docker build -t chatemis .
 ```
 
-3. Run the following command to start the Docker environment:
-```
+4. Run the following command to start the Docker environment:
+```bash
 # Start the container
 sudo docker start chatemis
+
+sudo docker run -it --rm --privileged --device /dev/snd --runtime nvidia \
+  --network=host \
+  -e PULSE_SERVER=unix:/run/user/1000/pulse/native \
+  -e PULSE_COOKIE=/tmp/pulse_cookie \
+  -v /run/user/1000/pulse/native:/run/user/1000/pulse/native \
+  -v ~/.config/pulse/cookie:/tmp/pulse_cookie:ro \
+  chatemis
 ```
 
 
