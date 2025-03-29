@@ -1,39 +1,50 @@
-# RoMeLa ChatBots!
+# 🤖 ChatBots!
 
-## Overview
+## 📋 Overview
 
-RoMeLa ChatBots is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots ARTEMIS and COSMO, DARwIn, and other RoMeLa robots. The system aims to implement a retrieval-based architecture that will enable robots to engage in natural and informative conversations during laboratory demonstrations (offline!). By leveraging a knowledge base built from alumni theses and research publications specific to each robot, the system will allow robots to provide accurate, technical responses while maintaining engaging interactions with visitors.  Here’s a video demo of the fully offline system in action:
+ChatBots is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots **ARTEMIS** and **COSMO**, **DARWIN**, and any other cool robots. 
 
-[Download video](./videos/demo.mp4) *(Fully offline interaction with BRUCE)* 
+The system implements a **retrieval-based architecture** that enables robots to engage in natural and informative conversations during laboratory demonstrations (*completely offline!*).
 
-<div align="center">
-  <img src="images/Jetson_Audio_Module.jpg" alt="RoMeLa Robot Demo" width="600" height="400">
-  <p><em>Jetson Audio Module, designed to be adapted to small, medium and large form factors </em></p>
+By leveraging a knowledge base built from alumni theses and research publications specific to each robot, the system allows robots to provide **accurate, technical responses** while maintaining engaging interactions with visitors. Here's a video demo of the fully offline system in action:
+<div align="center" style="display: flex; justify-content: center; align-items: center; gap: 40px; margin: 30px 0; flex-wrap: wrap;">
+  <div style="width: 45%; min-width: 300px; max-width: 500px;">
+    <img src="images/humanrobot.jpg" alt="Human-Robot Interaction" width="70%">
+    <p><em>Building bridges between humans and machines, one conversation at a time. AI generated :)</em></p>
+  </div>
+  <div style="width: 45%; min-width: 300px; max-width: 500px; align-self: center;">
+    <a href="https://youtu.be/6y75UbYwfy0">
+      <img src="https://img.youtube.com/vi/6y75UbYwfy0/maxresdefault.jpg" alt="RoMeLa ChatBots Demo" width="100%">
+    </a>
+    <p><em>👆 Click the image above to watch the fully offline interaction with BRUCE.</em></p>
+  </div>
 </div>
 
-## System Requirements
+## 💻 System Requirements
 
-- Ubuntu 22.04 LTS
-- Python 3.10.12
-- CTK 12.6
-- nvidia-jetpack (6.0+b106)
+- **Ubuntu 22.04 LTS** <em>(recommended)</em>
+- **Python 3.10.12** <em>(or newer)</em>
+- **CTK 12.6**
+- **nvidia-jetpack** (6.0+b106)
 
-## Hardware Components 
+## 🔧 Hardware Components 
 
-- Jetson Orin Nano + Audio Case (if you want us to release the CAD for the cute case, let us know!)
--  [Waveshare Audio Card for Jetson Nano](https://www.waveshare.com/audio-card-for-jetson-nano.htm) - USB audio codec designed specifically for Jetson Nano that provides audio input/output capabilities. We have validated that this can also work for a Jetson Orin Nano.
+- **Jetson Orin Nano + Audio Case** (if you want us to release the CAD for the cute case, let us know! 😊)
+- [Waveshare Audio Card for Jetson Nano](https://www.waveshare.com/audio-card-for-jetson-nano.htm) -
+ USB audio codec designed specifically for Jetson Nano that provides audio input/output capabilities.
+  We have **validated** that this can also work for a Jetson Orin Nano.
 
 
-## Quick Start
+## ⚡ Quick Start
 
-### 1. Audio Source Check
+### 1️⃣ Audio Source Check
 
 In the "Sound" tab:
 
-- Ensure the "Output Device" is set to "Speakers - USB PnP Audio Device."
-- Ensure the "Input Device" is set to "Microphone - USB PnP Audio Device."
+- ✅ Ensure the "**Output Device**" is set to "Speakers - USB PnP Audio Device."
+- ✅ Ensure the "**Input Device**" is set to "Microphone - USB PnP Audio Device."
 
-### 2. Environment Setup
+### 2️⃣ Environment Setup
 
 Create and activate a Python virtual environment in the root of the project:
 
@@ -48,23 +59,26 @@ chmod +x misc/*.sh
 ./misc/install.sh
 ```
 
-### 3. Audio System verification
+### 3️⃣ Audio System verification
 Test your audio setup before running the main application:
 
 ```
 python ./scripts/audio_mic_test.py
 ```
 
-### 4. Initial configuration
+### 4️⃣ Initial configuration
 
 1. Generate the vector database (first-time setup). It might take a long time depending on the size of your documents. Luckily, this will be done only once, be patient and let it run:
 ```
 python scripts/tokenizer.py
 ```
-Note: Ensure your RAG data is in the data folder before running this command. For the sake of this example, we included one paper related to one of our robots called BRUCE (Bipedal Robotic Unit with Compliant Enhanced locomotion).
+ > ⏳ It might take a **long time** depending on the size of your documents. This will be done **only once**, 
+ so be patient and let it run.
+
+ > 📝 **Note**: Ensure your RAG data is in the data folder before running this command. For this example, we included one paper related to our robot BRUCE (Bipedal Robotic Unit with Compliant Enhanced locomotion).
 
 2. Download an LLM model:
-- Select a model compatible with ollama CUDA: https://ollama.com/search
+- Select a model **compatible with ollama CUDA 🦙**: https://ollama.com/search
 - Write the name of the model in config.yaml in the "model" field
 
 Check the models that are available through ollama with this command
@@ -75,16 +89,16 @@ and then pull the one of your preference with this (example - the best one so fa
 ```bash
 ollama pull llama3.2:3b
 ```
-After this you can run it offline
+> 🔌 After this, you can run it **completely offline**!
 
-3. Adjust the parameters in config.yaml according to your application
+3. **Adjust parameters** in config.yaml according to your application:
 
-  Important parameters
-
-    - `mode`: Set to "k" for keyboard input or "v" for voice interaction
-    - `model`: Choose "llama3" for balance, "mistral" for speed, or "llama3.2:70b" for quality
-    - `word_count`: Controls response length (15-20: concise, 30-40: detailed)
-    - `chunk_size`: Affects RAG precision (smaller: 300-400) vs. context (larger: 600-1000)
+|**Parameter** | **Description** |
+   | --- | --- |
+   | `mode` | Set to "k" for keyboard input or "v" for voice interaction |
+   | `model` | Choose "Llama2.3" for balance, "TinyLlama" for speed, or "DeepSeek" for quality |
+   | `word_count` | Controls response length (15-20: concise, 30-40: detailed) |
+   | `chunk_size` | Affects RAG precision (smaller: 300-400) vs. context (larger: 600-1000) |
 
 
 4. Start the main application:
@@ -92,15 +106,15 @@ After this you can run it offline
 python main.py 
 ```
 
-## Docker Deployment
+## 🐳 Docker Deployment
 
-### If you are using Docker
+### **If you are using Docker**
 
 (Optional) Make sure that your user is added to the docker group, otherwise there might be permission problems with the audio card
 ```bash
 sudo usermod -aG docker $USER
 ```
-And reboot after.
+> 🔄 **Remember to reboot** after this change!
 
 1. Open the Dockerfile and change "data.pdf" to the actual name of your PDF in the "data" folder and comment/uncomment lines as needed for tokenization.
 
@@ -111,7 +125,6 @@ docker build -t jetsonchat .
 
 3. Run the following command to start the Docker container with required pulseaudio information:
 ```bash
-# Start and run the container
 docker start chatemis
 ```
 
@@ -122,23 +135,36 @@ docker start chatemis
 
 5. Repeat the tokenization process, check the audio and then run the main python script! 
 
- **Warning:** Unless you want your Jetson becoming your roommate's 3 AM conversation partner, remember to stop that container! :)
+> ⚠️ **Warning**: Unless you want your Jetson becoming your roommate's 3 AM conversation partner, remember to **stop that container**! 😆
 
- ## Performance Profiling 
+## 📊 Performance Profiling 
 
-During testing with the Llama 3.2:2b model, the system was asked:
+During testing with the `Llama3.2:2b` model, the system was asked:
 
-User: "What is your name? What are you?"
+> <strong> User </strong>: <em>"What is your name? What are you?"</em>
 
-Response: "My name is BRUCE, and I am a miniature bipedal robot with proprioceptive actuation. I'm designed to perform highly dynamic motions like those of a human's lower body, while also being able to interact with unstructured environments through my contacts sensing capabilities."
+> <strong> Response </strong>:  <em>"My name is BRUCE, and I am a miniature bipedal robot with proprioceptive actuation.
+ I'm designed to perform highly dynamic motions like those of a human's lower body, while also being able to interact with 
+ unstructured environments through my contacts sensing capabilities."</em>
 
-The response was generated in ~30 seconds, with a clear GPU utilization spike visible in the performance graph below at 25 seconds (check GPU utilization). This highlights the computational load of offline LLM inference on the Jetson Orin Nano while maintaining responsive interactions. I encourage to test different large language models and check what are the different responses that you obtain for the same question!
+The response was generated in ~30 seconds, with a clear **GPU utilization spike** visible in the performance graph 
+below at 25 seconds (check GPU utilization). This highlights the computational load of offline LLM inference on the 
+Jetson Orin Nano while maintaining responsive interactions.
+We encourage you to test **different large language models** and compare responses for the same questions!
 
 <div align="center">
   <img src="images/jetson_custom_view.png" alt="RoMeLa Robot Demo" width="450" height="600">
-  <p><em> Peak GPU utilization during LLM inference (~30s response time) based on tegra-stats</em></p>
+  <p><em>📈 Peak GPU utilization during LLM inference (~30s response time) based on tegra-stats</em></p>
 </div>
 
-For detailed profiling tools and scripts, check the misc/ folder.
+For detailed profiling tools and scripts, check the `misc/` folder.
 
+## 🙋 Support
+If you have any questions or encounter issues, please open an **issue** in this repository.
 
+## 🔄 Contributing
+Contributions are **welcome**! Please feel free to submit a **Pull Request**.
+
+<p align="center">
+  Made with ❤️ by RoMeLa Lab
+</p>
