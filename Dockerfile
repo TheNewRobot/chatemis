@@ -12,15 +12,12 @@ RUN mkdir -p  /app/vectorstore
 RUN mkdir -p  /app/data
 
 # Uncomment these lines if you already tokenized your documents
-#COPY /vectorstore/index.faiss ./vectorstore
-#COPY /vectorstore/index.pkl ./vectorstore
+COPY /vectorstore/index.faiss ./vectorstore
+COPY /vectorstore/index.pkl ./vectorstore
 
 # Comment these lines out if you already tokenized your documents
-COPY /data/data.pdf ./data #Change data.pdf to your actual PDF name
-COPY scripts/tokenizer.py ./scripts/
-
-# Test audio
-COPY scripts/audio_mic_test.py ./scripts/
+#COPY /data/data.pdf ./data #Change data.pdf to your actual PDF name
+#COPY scripts/tokenizer.py ./scripts/
 
 # Create and activate virtual environment
 RUN python -m venv env
@@ -44,7 +41,7 @@ RUN pip install --no-deps -r requirements.txt
 RUN apt install -y espeak-ng
 
 # Run the tokenizer script (Remove this if you already tokenized your documents)
-RUN python scripts/tokenizer.py
+#RUN python scripts/tokenizer.py
 
 # Run the main application
 CMD ["python", "main.py"]
