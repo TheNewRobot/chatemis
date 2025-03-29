@@ -12,7 +12,7 @@ RUN mkdir -p  /app/vectorstore
 RUN mkdir -p  /app/data
 
 # Uncomment this if you already tokenized your documents
-C#OPY /vectorstore/index.faiss ./vectorstore
+#COPY /vectorstore/index.faiss ./vectorstore
 #COPY /vectorstore/index.pkl ./vectorstore
 
 COPY /data/data.pdf ./data

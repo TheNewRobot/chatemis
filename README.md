@@ -30,7 +30,27 @@ TODOs:
 
 ## Quick Start
 
-### 1. Environment Setup
+### 1. Set CPU Clock
+
+1. Ensure the CPU clock is correct:
+
+```bash
+sudo hwclock --set --date="<current date>"
+sudo hwclock -s # Set system clock to the same as hardware clock
+```
+
+Note: The date must be set in the format YYYY-MM-DD HH:MM:SS
+
+2. Go to the "Settings" menu for the Jetson Nano Orin.
+
+In the Wi-Fi tab, ensure you are connected to the Wi-Fi network.
+
+In the "Sound" tab:
+
+- Ensure the "Output Device" is set to "Speakers - USB PnP Audio Device."
+- Ensure the "Input Device" is set to "Microphone - USB PnP Audio Device."
+
+### 2. Environment Setup
 
 Create and activate a Python virtual environment:
 
@@ -38,8 +58,23 @@ Create and activate a Python virtual environment:
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+sudo apt-get update && sudo apt-get install -y \
+    portaudio19-dev \
+    alsa-utils \
+    pulseaudio \
+    libasound2-dev
+
+sudo apt-get update
+sudo apt -y install ffmpeg
+sudo apt-get -y install cmake
+sudo apt-get -y install python3-pyaudio
+sudo apt install -y portaudio19-dev
+pip install --global-option='build_ext' --global-option='-I/usr/local/include' --global-option='-L/usr/local/lib' pyaudio 
+pip install --upgrade pip
+pip install --no-deps -r requirements.txt
+sudo apt install -y espeak-ng
 ```
-### 2. Audio System verification
+### 3. Audio System verification
 Test your audio setup before running the main application:
 
 ```
@@ -48,7 +83,7 @@ python audio_mic_test.py
 aplay speech.wav
 ```
 
-### 3. Initial configuration
+### 4. Initial configuration
 
 1. Generate the vector database (first-time setup):
 ```
@@ -71,22 +106,13 @@ For further reading you can check the `llm_cpp.py` class which is the llm hanlde
 ### If we're using Docker (TODO)
 
 ```
-docker build -t chatemis .
+sudo docker build -t chatemis .
 ```
-### Run the container for the first time 
-```
-./docker/run_docker_gpu.bash
-```
+
 ### Managing the Container
 ```
 # Start the container
-docker start chatemis
-
-# Verify container status
-docker ps -l
-
-# Access the container
-docker exec -it chatemis /bin/bash
+sudo docker start chatemis
 ```
 
 
