@@ -97,7 +97,6 @@ prompt_template = PromptTemplate(
         "Based on the above, answer the question: {question}"
     )
 )
-qa_chain = LLMChain(llm=llm, prompt=prompt_template)
 
 # Set device
 device = None
@@ -166,11 +165,10 @@ def start_listening():
 			for i in range(0, math.ceil(RATE / CHUNK * wait_for_speech)):
 			    data = stream.read(CHUNK)
 			    Recordframes.append(data)
-			print_and_speak("Processing...")
 			 
 			stream.stop_stream()
 			stream.close()
-			
+			print_and_speak("Processing...")
 			waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
 			waveFile.setnchannels(CHANNELS)
 			waveFile.setsampwidth(audio.get_sample_size(FORMAT))

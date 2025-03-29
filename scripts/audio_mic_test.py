@@ -13,7 +13,7 @@ mic = sr.Microphone(device_index=0)  # Change index to match your device
 
 engine = pyttsx3.init('espeak')
 engine.setProperty('voice', 'english-us')
-engine.setProperty('rate', 200)
+engine.setProperty('rate', 190)
 engine.setProperty('volume', 3.0)
 
 def say_and_print(text):
