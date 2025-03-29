@@ -1,47 +1,64 @@
 # Base image with Python 3.10.12
 FROM python:3.10.12-slim
 
+ARG PYTHON_ENV_NAME=jetsonchat
+
 # Set working directory
 WORKDIR /app
 
-# Copy requirements file and scripts
-COPY requirements.txt .
-COPY main.py .
-COPY config.yaml .
-RUN mkdir -p  /app/vectorstore
-RUN mkdir -p  /app/data
+# Create required directories
+RUN mkdir -p /app/vectorstore /app/data /app/misc/performance
 
-# Uncomment these lines if you already tokenized your documents
-#COPY /vectorstore/index.faiss ./vectorstore
-#COPY /vectorstore/index.pkl ./vectorstore
+# Copy configuration files
+COPY requirements.txt config.yaml main.py ./
 
-# Comment these lines out if you already tokenized your documents
-COPY /data/data.pdf ./data #Change data.pdf to your actual PDF name
+# Copy performance monitoring scripts
+COPY misc/performance/ ./misc/performance/
+
+# Set up for either pre-tokenized or raw data processing
+# OPTION 1: If you already tokenized your documents
+#COPY /vectorstore/index.faiss /vectorstore/index.pkl ./vectorstore/
+
+# OPTION 2: If you need to tokenize documents during build
+COPY data/data.pdf ./data/
 COPY scripts/tokenizer.py ./scripts/
+COPY scripts/audio_mic_test.py ./scripts/
 
-# Create and activate virtual environment
-RUN python -m venv jetsonchat
-ENV PATH="/app/env/bin:$PATH"
+# Create virtual environment
+RUN python -m venv ${PYTHON_ENV_NAME}
 
-# Install dependencies
+# Set environment variables to use the virtual environment
+ENV PATH="/app/${PYTHON_ENV_NAME}/bin:$PATH"
+ENV VIRTUAL_ENV="/app/${PYTHON_ENV_NAME}"
+
+# Install system dependencies (grouped by purpose)
 RUN apt-get update && apt-get install -y \
+    # Audio dependencies
     portaudio19-dev \
+    libasound2-dev \
     alsa-utils \
     pulseaudio \
-    libasound2-dev
+    pulseaudio-utils \
+    flac \
+    # Media processing
+    ffmpeg \
+    # Build tools
+    cmake \
+    # Text-to-speech
+    espeak-ng \
+    # Python audio support
+    python3-pyaudio
 
-RUN apt-get update
-RUN apt -y install ffmpeg
-RUN apt-get -y install cmake
-RUN apt-get -y install python3-pyaudio
-RUN apt-get update
-RUN pip install --global-option='build_ext' --global-option='-I/usr/local/include' --global-option='-L/usr/local/lib' pyaudio 
-RUN pip install --upgrade pip
-RUN pip install --no-deps -r requirements.txt
-RUN apt install -y espeak-ng
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install --global-option='build_ext' \
+    --global-option='-I/usr/local/include' \
+    --global-option='-L/usr/local/lib' \
+    pyaudio && \
+    pip install --no-deps -r requirements.txt
 
-# Run the tokenizer script (Remove this if you already tokenized your documents)
-RUN python scripts/tokenizer.py
+# Run the tokenizer script (Remove this if using pre-tokenized documents)
+# RUN python scripts/tokenizer.py
 
-# Run the main application
-CMD ["python", "main.py"]
+# Launch the application
+# CMD ["python", "main.py"]

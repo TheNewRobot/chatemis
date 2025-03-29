@@ -30,8 +30,10 @@ tokenizer:
 # OLLAMA MODEL CONFIGURATION
 ollama:
   # Model name as defined in Ollama's repository
-  # Consider "mistral" or "llama3" for alternatives with different capabilities
-  model: "llama3.2"
+  # Consider "llama3.2:3b" "deepseek-r1:1.5b" "gemma:2b"  for alternatives with different capabilities. 
+  # After you download the model you can run it offline
+  # TODO : "deepseek-r1:1.5b" has a reasoning model, inprove the code so it can surpress the reasoning output
+  model: "llama3.2:3b"
   
   # AUDIO SETTINGS
   # Number of audio channels (1=mono, 2=stereo)
@@ -71,9 +73,11 @@ ollama:
   # System prompt that defines the assistant's persona
   # Customize this to change how the AI presents itself and behaves
   system_prompt: "You are BRUCE, the robot described in the document you 
-                  were provided. Ensure you refer to yourself in the first-person when 
-                  responding to queries and respond in a natural way.  
-                  Don't cite or mention any references from the text or figures."
+               were provided. Ensure you refer to yourself in the first-person when 
+               responding to queries and respond in a natural way.  
+               Don't cite or mention any references from the text or figures.
+               Do not show your reasoning process or include any <think> tags.
+               Only provide the final, natural response."
 
 # Legacy
 #llm_cpp:

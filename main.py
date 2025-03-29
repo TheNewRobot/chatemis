@@ -85,7 +85,12 @@ class ArtemisAssistant:
             print("Using CPU")
         
         # Initialize LLM
-        llm = OllamaLLM(model=self.config['ollama']['model'], system=sys_prompt)
+        
+        self.model = self.config['ollama']['model']
+        
+        llm = OllamaLLM(model=self.model, system=sys_prompt)
+        
+        print(f"Using this LLM : {self.model}")
         
         # Set up memory
         memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -128,7 +133,16 @@ class ArtemisAssistant:
         print(text)
         self.engine.say(text)
         self.engine.runAndWait()
-    
+        
+    def filter_thinking(self, response):
+        """Remove thinking tags and content from LLM response."""
+        import re
+        # Remove <think>...</think> blocks
+        filtered_response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+        # Remove any other potential thinking markers
+        filtered_response = re.sub(r'\[thinking\].*?\[/thinking\]', '', filtered_response, flags=re.DOTALL)
+        return filtered_response.strip()
+
     def run_rag_with_memory(self, question: str) -> str:
         """Process a question through the RAG pipeline and update memory."""
         # Retrieve relevant documents
@@ -150,6 +164,9 @@ class ArtemisAssistant:
         
         # Get answer from chain
         answer = self.qa_chain.run(input_data)
+        
+        # Apply filter to remove thinking output
+        answer = self.filter_thinking(answer)
         
         # Update memory with question and answer
         self.memory.chat_memory.add_user_message(question)
@@ -201,7 +218,7 @@ class ArtemisAssistant:
     
     def start_voice_mode(self) -> bool:
         """Run the assistant in voice mode. Returns False if shutdown requested."""
-        self.print_and_speak("Please state your question.")
+        self.print_and_speak("Can I help you? ")
         
         # Record and process audio
         self.print_and_speak("Processing...")
