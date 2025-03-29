@@ -5,3 +5,7 @@ models/
 *.wav
 scripts/__pycache__/
 jetsonchat/
+
+misc/performance/*.csv
+misc/performance/*.log
+misc/performance/plots/*.png
