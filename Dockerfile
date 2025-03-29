@@ -34,7 +34,7 @@ RUN apt-get update
 RUN apt -y install ffmpeg
 RUN apt-get -y install cmake
 RUN apt-get -y install python3-pyaudio
-RUN apt-get update && apt-get install -y libasound2 portaudio19-dev
+RUN apt-get update
 RUN pip install --global-option='build_ext' --global-option='-I/usr/local/include' --global-option='-L/usr/local/lib' pyaudio 
 RUN pip install --upgrade pip
 RUN pip install --no-deps -r requirements.txt
