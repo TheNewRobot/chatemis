@@ -3,7 +3,6 @@
 from os import system 
 import pyaudio
 import speech_recognition as sr
-#from gpt4all import GPT4All
 import sys
 import whisper
 import time
@@ -56,18 +55,20 @@ source = sr.Microphone()
 config_path = './config.yaml'
 with open(config_path, "r") as f:
 	config = yaml.safe_load(f)
-	
+
+# Set up TTS engine
 engine = pyttsx3.init()
 engine.setProperty('voice', 'english-us')
 engine.setProperty('rate', 190)
 engine.setProperty('volume',3.0) 
 
-	
+# Function to print and speak text
 def print_and_speak(text):
 	print(text)
 	engine.say(text)
 	engine.runAndWait()
-	
+
+# Get information from congig file
 print_and_speak("Setting up...")
 max_words = int(config['ollama']['word_count'])
 faiss_path = config['tokenizer']['db_faiss_path']
@@ -83,6 +84,7 @@ audio = pyaudio.PyAudio()
 time_per_word = config['ollama']['time_per_word']
 wait_for_speech = config['ollama']['wait_for_speech']
 sys_prompt = config['ollama']['system_prompt'] + "\n\nPlease keep all of your responses within " + str(max_words) + " words."
+
 # Create RetrievalQA
 llm = OllamaLLM(model = config['ollama']['model'], system=sys_prompt)
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
@@ -96,6 +98,8 @@ prompt_template = PromptTemplate(
     )
 )
 qa_chain = LLMChain(llm=llm, prompt=prompt_template)
+
+# Set device
 device = None
 if torch.cuda.is_available():
 	device_name = torch.cuda.get_device_name(0)  
@@ -104,16 +108,20 @@ if torch.cuda.is_available():
 else:
 	print("You are good to go with cpu!")
 	device = 'cpu'
+
+# Set up embeddings
 model_kwargs = {'device': device}
 encode_kwargs = {'normalize_embeddings': True}
 embeddings = HuggingFaceInstructEmbeddings(model_name=embedding_model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs)
 
+# Set up data for RAG
 vectorstore = FAISS.load_local(folder_path=faiss_path, embeddings=embeddings, allow_dangerous_deserialization=True)
 retriever = vectorstore.as_retriever()
 qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, memory=memory)
 
 qa_chain = LLMChain(llm=llm, prompt=prompt_template)
 
+# Function to get information from data and remember past messages
 def run_rag_with_memory(question: str) -> str:
     retrieved_docs = retriever.get_relevant_documents(question)
     context = "\n\n".join(doc.page_content for doc in retrieved_docs)
@@ -143,6 +151,7 @@ def start_listening():
 	print_and_speak("Hello! What can I do for you?")  
 
 	while True:
+		# Voice mode
 		if 'v' in mode.lower():
 			
 			time.sleep(2)
@@ -171,7 +180,6 @@ def start_listening():
 			waveFile.writeframes(b''.join(Recordframes))
 			waveFile.close()
 				
-			#try:
 			prompt = base_model.transcribe(WAVE_OUTPUT_FILENAME)['text']
 
 			if prompt.lower() == "shut down.":
@@ -185,8 +193,7 @@ def start_listening():
 				print_and_speak(response)
 
 				time.sleep(time_per_word*len(response))
-			#except: 
-				#pass
+		# Keyboard mode
 		elif 'k' in mode.lower():
 			print("Write your question here: ")
 			

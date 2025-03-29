@@ -106,7 +106,7 @@ For further reading you can check the `llm_cpp.py` class which is the llm hanlde
 
 ### If we're using Docker
 
-1. Open the Dockerfile and change "data.pdf" to the actual name of your PDF in the "data" folder and comment/uncomment lines as needed.
+1. Open the Dockerfile and change "data.pdf" to the actual name of your PDF in the "data" folder and comment/uncomment lines as needed for tokenization.
 
 2. Run the following command to build the Docker environment:
 ```bash
