@@ -157,7 +157,7 @@ def start_listening():
 			time.sleep(2)
 			
 			print_and_speak("Please state your question.")
-
+			# Record audio from user
 			stream = audio.open(format=FORMAT, channels=CHANNELS,
 					rate=RATE, input=True,input_device_index = INDEX,
 					frames_per_buffer=CHUNK)
@@ -171,7 +171,6 @@ def start_listening():
 			stream.stop_stream()
 			stream.close()
 			
-			 
 			waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
 			waveFile.setnchannels(CHANNELS)
 			waveFile.setsampwidth(audio.get_sample_size(FORMAT))
@@ -187,8 +186,8 @@ def start_listening():
 				break
 			elif len(prompt.strip()) != 0:
 				print('User: ' + prompt)
-
-			
+				
+				# Get response
 				response = run_rag_with_memory(prompt)
 				print_and_speak(response)
 
