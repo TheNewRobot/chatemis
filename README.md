@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-ChatBots is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots **ARTEMIS** and **COSMO**, **DARWIN**, and any other cool robots. 
+Chatemis is a specialized conversational AI system being developed for RoMeLa's advanced robotic platforms, including the humanoid robots **ARTEMIS** and **COSMO**, **DARWIN**, and any other cool robots. 
 
 The system implements a **retrieval-based architecture** that enables robots to engage in natural and informative conversations during laboratory demonstrations (*completely offline!*).
 
